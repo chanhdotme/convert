@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chuyển Đổi Băng Thông & Dung Lượng Mạng</title>
+<link rel="icon" href="Chanh.png" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   ROOT VARIABLES
+══════════════════════════════════════════ */
+:root {
+  --P:    #1aa6f6;
+  --P-d:  #0e8ed4;
+  --P-l:  #4dc3ff;
+  --P-bg: rgba(26,166,246,.07);
+  --P-bd: rgba(26,166,246,.22);
+
+  --bg:   #f0f5fa;
+  --bg2:  #e3ecf5;
+  --surf: #ffffff;
+  --s2:   #f6fafd;
+  --s3:   #edf4fb;
+
+  --bd:   rgba(26,100,160,.10);
+  --bd2:  rgba(26,100,160,.18);
+
+  --tx:   #0d1f2e;
+  --sub:  #527090;
+  --dim:  #8aaabf;
+
+  --green:  #0bc47a;
+  --orange: #f5872a;
+  --red:    #f04559;
+  --purple: #7c5cbf;
+  --teal:   #00bcd4;
+
+  --r:    13px;
+  --r-lg: 20px;
+  --sh:   0 2px 14px rgba(15,40,70,.08);
+  --sh-h: 0 8px 36px rgba(26,166,246,.14);
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Roboto','Helvetica Neue',Helvetica,Arial,sans-serif;
+  background: var(--bg);
+  color: var(--tx);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── BACKGROUND ── */
+.bg-layer {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 5% -5%,  rgba(26,166,246,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 95% 105%, rgba(0,188,212,.08)  0%, transparent 55%),
+    radial-gradient(ellipse 45% 40% at 55% 50%,  rgba(26,166,246,.04) 0%, transparent 70%);
+}
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(26,100,160,.07) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+/* ── WRAP ── */
+.wrap {
+  position: relative; z-index: 1;
+  max-width: 960px; margin: 0 auto;
+  padding: 48px 20px 100px;
+}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--P-bg);
+  border: 1px solid var(--P-bd);
+  border-radius: 100px;
+  padding: 5px 16px 5px 11px;
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--P);
+  margin-bottom: 18px;
+}
+.badge-dot {
+  width: 6px; height: 6px; background: var(--P);
+  border-radius: 50%;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(26,166,246,.5); }
+  50%      { box-shadow: 0 0 0 6px rgba(26,166,246,0); }
+}
+h1 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 900; letter-spacing: -1.5px; line-height: 1.06;
+  color: var(--tx); margin-bottom: 14px;
+}
+h1 em { color: var(--P); font-style: normal; }
+.tagline {
+  color: var(--sub); font-size: 15px;
+  line-height: 1.65; max-width: 520px; margin: 0 auto;
+}
+
+/* ══════════════════════════════════════════
+   CONCEPT PILLS — top explainer
+══════════════════════════════════════════ */
+.concept-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  justify-content: center; margin-bottom: 36px;
+}
+.cpill {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surf); border: 1px solid var(--bd2);
+  border-radius: 10px; padding: 9px 15px;
+  font-size: 12.5px; font-weight: 500; color: var(--sub);
+  box-shadow: var(--sh);
+}
+.cpill strong { color: var(--tx); font-weight: 700; }
+.cpill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ══════════════════════════════════════════
+   SECTION TITLE
+══════════════════════════════════════════ */
+.sec {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--dim);
+  margin: 48px 0 16px;
+  display: flex; align-items: center; gap: 14px;
+}
+.sec::after { content:''; flex:1; height:1px; background: var(--bd2); }
+
+/* ══════════════════════════════════════════
+   MAIN CONVERTER CARD
+══════════════════════════════════════════ */
+.conv-card {
+  background: var(--surf);
+  border: 1px solid var(--bd);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-h);
+  overflow: hidden;
+}
+.conv-card-top {
+  background: linear-gradient(135deg, var(--P) 0%, #0ea8f8 50%, #00c8e8 100%);
+  padding: 24px 32px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+}
+.conv-card-title {
+  font-size: 15px; font-weight: 700; color: #fff; letter-spacing: -.3px;
+}
+.conv-card-sub {
+  font-size: 12px; color: rgba(255,255,255,.75); margin-top: 2px;
+}
+.conv-direction-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3);
+  border-radius: 9px; padding: 7px 14px;
+  font-family: 'Roboto','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 12px; font-weight: 700; color: #fff;
+  cursor: pointer; transition: all .2s;
+}
+.conv-direction-btn:hover { background: rgba(255,255,255,.28); }
+
+.conv-body { padding: 28px 32px 28px; }
+
+/* Input row */
+.inp-row {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  gap: 16px; align-items: end; margin-bottom: 22px;
+}
+.inp-group { display: flex; flex-direction: column; gap: 7px; }
+.inp-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--sub);
+  display: flex; align-items: center; gap: 8px;
+}
+.unit-tag {
+  background: var(--P-bg); border: 1px solid var(--P-bd);
+  border-radius: 6px; padding: 2px 8px;
+  font-size: 10px; font-weight: 800; color: var(--P);
+  letter-spacing: .5px;
+}
+.big-inp {
+  width: 100%; padding: 16px 20px;
+  background: var(--s2); border: 2px solid var(--bd2);
+  border-radius: var(--r); outline: none;
+  font-family: 'Roboto Mono','Courier New',monospace;
+  font-size: 26px; font-weight: 700; color: var(--tx);
+  transition: border-color .2s, box-shadow .2s;
+  -moz-appearance: textfield;
+}
+.big-inp::-webkit-outer-spin-button,
+.big-inp::-webkit-inner-spin-button { -webkit-appearance: none; }
+.big-inp::placeholder { color: var(--dim); font-size: 18px; font-weight: 400; }
+.big-inp:focus {
+  border-color: var(--P);
+  box-shadow: 0 0 0 3px rgba(26,166,246,.15);
+  background: #fff;
+}
+.big-inp.result-inp {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--P) 7%, var(--surf)),
+    color-mix(in srgb, var(--P) 4%, var(--surf)));
+  border-color: var(--P-bd);
+  color: var(--P);
+}
+
+.swap-btn {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--surf); border: 2px solid var(--bd2);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; transition: all .25s; color: var(--P);
+  box-shadow: var(--sh); flex-shrink: 0; align-self: flex-end;
+  margin-bottom: 0;
+}
+.swap-btn:hover {
+  background: var(--P); color: #fff;
+  border-color: var(--P);
+  transform: rotate(180deg);
+  box-shadow: 0 4px 18px rgba(26,166,246,.3);
+}
+
+/* Unit selector */
+.unit-sel-row {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px;
+  margin-bottom: 20px; align-items: start;
+}
+.unit-sel-spacer { width: 46px; }
+.unit-group { display: flex; flex-direction: column; gap: 6px; }
+.unit-group-lbl {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--dim);
+}
+.unit-btns { display: flex; flex-wrap: wrap; gap: 5px; }
+.ubtn {
+  padding: 6px 12px; border-radius: 8px;
+  border: 1.5px solid var(--bd2);
+  background: var(--s2); color: var(--sub);
+  font-family: 'Roboto Mono','Courier New',monospace;
+  font-size: 11.5px; font-weight: 700;
+  cursor: pointer; transition: all .18s;
+  white-space: nowrap;
+}
+.ubtn:hover { border-color: var(--P); color: var(--P); background: var(--P-bg); }
+.ubtn.on {
+  background: var(--P); border-color: var(--P);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(26,166,246,.28);
+}
+
+/* Result strip */
+.result-strip {
+  display: none; margin-top: 4px;
+  background: linear-gradient(135deg, rgba(26,166,246,.08), rgba(0,200,220,.05));
+  border: 1.5px solid var(--P-bd);
+  border-radius: var(--r); padding: 18px 22px;
+  flex-wrap: wrap; gap: 16px; align-items: center;
+}
+.result-strip.show { display: flex; }
+.res-main {
+  font-family: 'Roboto Mono','Courier New',monospace;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700; color: var(--P); line-height: 1;
+}
+.res-unit { font-size: 1rem; opacity: .65; margin-left: 3px; }
+.res-explain {
+  font-size: 13px; color: var(--sub); line-height: 1.7; flex: 1;
+}
+.res-explain strong { color: var(--tx); font-weight: 700; }
+
+/* ══════════════════════════════════════════
+   QUICK REFERENCE CARDS
+══════════════════════════════════════════ */
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.ref-card {
+  background: var(--surf); border: 1px solid var(--bd);
+  border-radius: var(--r); padding: 18px 20px;
+  box-shadow: var(--sh); position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.ref-card:hover {
+  transform: translateY(-3px); box-shadow: var(--sh-h);
+}
+.ref-card::before {
+  content:''; position: absolute; top:0; left:0; right:0; height:3px;
+  background: var(--stripe);
+}
+.ref-card-ico { font-size: 24px; margin-bottom: 10px; }
+.ref-card-title { font-size: 13px; font-weight: 700; color: var(--tx); margin-bottom: 4px; }
+.ref-card-val {
+  font-family: 'Roboto Mono','Courier New',monospace;
+  font-size: 15px; font-weight: 700; color: var(--P); margin-bottom: 4px;
+}
+.ref-card-desc { font-size: 11.5px; color: var(--dim); line-height: 1.5; }
+
+/* ══════════════════════════════════════════
+   CONVERSION TABLE
+══════════════════════════════════════════ */
+.tbl-card {
+  background: var(--surf); border: 1px solid var(--bd);
+  border-radius: var(--r-lg); overflow: hidden;
+  box-shadow: var(--sh);
+}
+.tbl-tabs {
+  display: flex; border-bottom: 1px solid var(--bd2);
+  overflow-x: auto; scrollbar-width: none;
+}
+.tbl-tabs::-webkit-scrollbar { display: none; }
+.ttab {
+  padding: 12px 20px; border: none; background: var(--s2);
+  font-family: 'Roboto','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 12px; font-weight: 700; color: var(--dim);
+  cursor: pointer; white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all .18s; letter-spacing: .3px;
+}
+.ttab.on {
+  color: var(--P); border-bottom-color: var(--P);
+  background: var(--surf);
+}
+.ttab:hover:not(.on) { color: var(--sub); background: var(--surf); }
+
+.tbl-panel { display: none; }
+.tbl-panel.on { display: block; }
+
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  background: var(--s2); padding: 12px 18px;
+  font-size: 10px; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--sub);
+  text-align: left; border-bottom: 1px solid var(--bd2);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 12px 18px; font-size: 13.5px;
+  border-bottom: 1px solid var(--bd);
+  color: var(--sub); vertical-align: middle;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--s2); }
+.mono { font-family: 'Roboto Mono','Courier New',monospace; font-weight: 700; }
+.col-from { color: var(--tx); font-weight: 600; }
+.col-to   { color: var(--P); font-size: 14px; }
+.col-note { font-size: 12px; color: var(--dim); }
+.highlight-row td { background: rgba(26,166,246,.05) !important; }
+.highlight-row .col-to { color: var(--P); font-size: 15px; }
+
+/* ══════════════════════════════════════════
+   FORMULA BOX
+══════════════════════════════════════════ */
+.formula-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.fbox {
+  background: var(--surf); border: 1px solid var(--bd);
+  border-radius: var(--r); padding: 20px 22px;
+  box-shadow: var(--sh);
+}
+.fbox-label {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--P); margin-bottom: 10px;
+}
+.fbox-eq {
+  font-family: 'Roboto Mono','Courier New',monospace;
+  font-size: 15px; font-weight: 700; color: var(--tx);
+  background: var(--s2); border: 1px solid var(--bd2);
+  border-radius: 8px; padding: 10px 14px;
+  margin-bottom: 10px; line-height: 1.6;
+}
+.fbox-eq .hi { color: var(--P); }
+.fbox-desc { font-size: 12.5px; color: var(--sub); line-height: 1.6; }
+
+/* ══════════════════════════════════════════
+   EXAMPLES
+══════════════════════════════════════════ */
+.ex-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.ex-card {
+  background: var(--surf); border: 1px solid var(--bd);
+  border-radius: var(--r); padding: 20px 22px;
+  box-shadow: var(--sh); cursor: pointer; transition: all .2s;
+}
+.ex-card:hover {
+  border-color: var(--P-bd);
+  box-shadow: var(--sh-h); transform: translateY(-2px);
+}
+.ex-card-head {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.ex-ico {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.ex-card-title { font-size: 13.5px; font-weight: 700; color: var(--tx); }
+.ex-card-ctx   { font-size: 11.5px; color: var(--dim); margin-top: 1px; }
+.ex-steps { display: flex; flex-direction: column; gap: 6px; }
+.ex-step {
+  display: flex; align-items: flex-start; gap: 9px;
+  font-size: 12.5px; color: var(--sub); line-height: 1.55;
+}
+.ex-num {
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  background: var(--P-bg); border: 1px solid var(--P-bd);
+  font-size: 9.5px; font-weight: 800; color: var(--P);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.ex-step strong { color: var(--tx); font-weight: 700; }
+.ex-answer {
+  margin-top: 12px; padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(26,166,246,.07), rgba(26,166,246,.04));
+  border: 1px solid var(--P-bd); border-radius: 9px;
+  font-family: 'Roboto Mono','Courier New',monospace;
+  font-size: 14px; font-weight: 700; color: var(--P);
+}
+
+/* ══════════════════════════════════════════
+   REALWORLD SPEED TABLE
+══════════════════════════════════════════ */
+.speed-grid {
+  display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+  gap: 10px;
+}
+.speed-card {
+  background: var(--surf); border: 1px solid var(--bd);
+  border-radius: var(--r); padding: 16px 18px;
+  box-shadow: var(--sh); display: flex; align-items: center; gap: 14px;
+}
+.speed-ico { font-size: 26px; flex-shrink: 0; }
+.speed-name { font-size: 13px; font-weight: 600; color: var(--tx); margin-bottom: 3px; }
+.speed-val {
+  font-family: 'Roboto Mono','Courier New',monospace;
+  font-size: 13px; font-weight: 700; color: var(--P);
+}
+.speed-sub { font-size: 11px; color: var(--dim); margin-top: 1px; }
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer {
+  margin-top: 64px; padding-top: 24px;
+  border-top: 1px solid var(--bd);
+  text-align: center; color: var(--dim); font-size: 12px;
+  line-height: 1.8;
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — TABLET (≤900px)
+══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .wrap { padding: 36px 18px 80px; }
+  h1 { font-size: clamp(1.7rem, 5vw, 2.8rem); letter-spacing: -1px; }
+
+  .concept-row { gap: 7px; }
+  .cpill { font-size: 11.5px; padding: 7px 12px; gap: 7px; }
+
+  .formula-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ex-grid      { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ref-grid     { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .speed-grid   { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 9px; }
+
+  .conv-body { padding: 22px 24px; }
+  .conv-card-top { padding: 20px 24px 16px; }
+
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 540px; }
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — LARGE PHONE (≤680px)
+══════════════════════════════════════════ */
+@media (max-width: 680px) {
+  .wrap { padding: 28px 14px 72px; }
+  h1 { font-size: clamp(1.5rem, 7vw, 2.2rem); letter-spacing: -.8px; }
+  .tagline { font-size: 13.5px; }
+
+  /* Header badge */
+  .badge { font-size: 9px; letter-spacing: 1.8px; padding: 4px 12px 4px 9px; }
+
+  /* Concept pills — scroll horizontal on small screens */
+  .concept-row {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    justify-content: flex-start; gap: 7px;
+    padding-bottom: 4px; margin-left: -14px; margin-right: -14px;
+    padding-left: 14px; padding-right: 14px;
+  }
+  .concept-row::-webkit-scrollbar { display: none; }
+  .cpill { flex-shrink: 0; font-size: 11px; padding: 6px 11px; }
+
+  /* Converter card */
+  .conv-card-top {
+    padding: 16px 18px 13px;
+    flex-direction: column; align-items: flex-start; gap: 10px;
+  }
+  .conv-direction-btn { align-self: flex-end; padding: 6px 12px; font-size: 11px; }
+  .conv-body { padding: 18px 16px 20px; }
+
+  /* Unit selector — stack vertically */
+  .unit-sel-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .unit-sel-spacer { display: none; }
+
+  /* Unit buttons — smaller */
+  .ubtn { font-size: 10.5px; padding: 5px 10px; }
+
+  /* Input row — stack vertically, swap becomes horizontal bar */
+  .inp-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .swap-btn {
+    width: 100%; height: 40px;
+    border-radius: 10px; font-size: 16px;
+    order: 2;
+  }
+  /* Move swap between the two inputs */
+  .inp-row .inp-group:first-child { order: 1; }
+  .inp-row .inp-group:last-child  { order: 3; }
+
+  .big-inp { font-size: 22px; padding: 13px 16px; }
+  .big-inp::placeholder { font-size: 15px; }
+
+  /* Result strip */
+  .result-strip {
+    flex-direction: column; align-items: flex-start;
+    padding: 16px 18px; gap: 10px;
+  }
+  .res-main { font-size: clamp(1.6rem, 8vw, 2.2rem); }
+
+  /* Tables — horizontal scroll */
+  .tbl-card { border-radius: 14px; }
+  .tbl-tabs {
+    padding: 0;
+    border-bottom: 1px solid var(--bd2);
+  }
+  .ttab { font-size: 11px; padding: 10px 14px; }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 480px; }
+  thead th { font-size: 9.5px; padding: 10px 14px; }
+  tbody td  { font-size: 12.5px; padding: 10px 14px; }
+
+  /* Formulas */
+  .formula-grid { grid-template-columns: 1fr; gap: 10px; }
+  .fbox { padding: 16px 18px; }
+  .fbox-eq { font-size: 13.5px; padding: 9px 12px; }
+
+  /* Examples */
+  .ex-grid { grid-template-columns: 1fr; gap: 10px; }
+  .ex-card { padding: 16px 18px; }
+  .ex-card-title { font-size: 12.5px; }
+
+  /* Ref cards */
+  .ref-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+  .ref-card { padding: 15px 16px; }
+  .ref-card-ico { font-size: 20px; margin-bottom: 7px; }
+  .ref-card-title { font-size: 12px; }
+  .ref-card-val { font-size: 13px; }
+  .ref-card-desc { font-size: 10.5px; }
+
+  /* Speed grid */
+  .speed-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .speed-card { padding: 12px 13px; gap: 10px; }
+  .speed-ico  { font-size: 22px; }
+  .speed-name { font-size: 12px; }
+  .speed-val  { font-size: 11.5px; }
+  .speed-sub  { font-size: 10px; }
+
+  /* Section title */
+  .sec { font-size: 9px; margin: 36px 0 12px; }
+
+  footer { font-size: 11px; margin-top: 44px; }
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — SMALL PHONE (≤420px)
+══════════════════════════════════════════ */
+@media (max-width: 420px) {
+  .wrap { padding: 22px 12px 64px; }
+  h1 { font-size: 1.5rem; }
+  .tagline { font-size: 13px; }
+
+  .conv-body { padding: 16px 14px 18px; }
+  .big-inp { font-size: 20px; padding: 12px 14px; }
+
+  .ref-grid   { grid-template-columns: 1fr; gap: 8px; }
+  .speed-grid { grid-template-columns: 1fr; gap: 8px; }
+  .speed-card { padding: 11px 14px; }
+
+  .ex-card { padding: 14px 15px; }
+  .fbox    { padding: 14px 15px; }
+  .fbox-eq { font-size: 12.5px; }
+
+  table { min-width: 420px; }
+  .ttab { font-size: 10.5px; padding: 9px 11px; }
+
+  /* Concept pills even smaller */
+  .cpill { font-size: 10.5px; padding: 5px 10px; gap: 6px; }
+  .cpill-dot { width: 6px; height: 6px; }
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — LANDSCAPE PHONE
+══════════════════════════════════════════ */
+@media (max-height: 500px) and (orientation: landscape) {
+  header { margin-bottom: 20px; }
+  .wrap  { padding: 20px 18px 60px; }
+  .badge { margin-bottom: 10px; }
+  h1     { font-size: 1.8rem; margin-bottom: 8px; }
+  .tagline { font-size: 13px; margin-top: 8px; }
+  .concept-row { margin-bottom: 20px; }
+  .sec   { margin: 28px 0 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="badge"><div class="badge-dot"></div> Chính xác 100% · Tức thì · Miễn phí</div>
+  <h1>Chuyển Đổi <em>Băng Thông</em><br>& Dung Lượng Mạng</h1>
+  <p class="tagline">Công cụ chuyển đổi toàn diện: bit, byte, Kbps, Mbps, Gbps, KB, MB, GB — cùng bảng quy đổi và ví dụ thực tế.</p>
+</header>
+
+<!-- ══ CONCEPT PILLS ══ -->
+<div class="concept-row">
+  <div class="cpill"><div class="cpill-dot" style="background:#1aa6f6"></div><strong>bit (b)</strong>&nbsp;— đơn vị nhỏ nhất, 0 hoặc 1</div>
+  <div class="cpill"><div class="cpill-dot" style="background:#0bc47a"></div><strong>Byte (B)</strong>&nbsp;= 8 bit</div>
+  <div class="cpill"><div class="cpill-dot" style="background:#f5872a"></div><strong>Mbps</strong>&nbsp;= megabit/giây (tốc độ mạng)</div>
+  <div class="cpill"><div class="cpill-dot" style="background:#7c5cbf"></div><strong>MB/s</strong>&nbsp;= megabyte/giây (tốc độ file)</div>
+</div>
+
+<!-- ══ MAIN CONVERTER ══ -->
+<div class="sec">Công cụ chuyển đổi</div>
+
+<div class="conv-card">
+  <div class="conv-card-top">
+    <div>
+      <div class="conv-card-title">📁 MB ↔ GB · Mbps ↔ MB/s và hơn thế</div>
+      <div class="conv-card-sub">Mặc định: MB → GB · Nhập giá trị để chuyển đổi tức thì</div>
+    </div>
+    <button class="conv-direction-btn" onclick="swapUnits()">⇄ Đổi chiều</button>
+  </div>
+
+  <div class="conv-body">
+
+    <!-- Unit selector -->
+    <div class="unit-sel-row">
+      <div class="unit-group">
+        <div class="unit-group-lbl">Từ đơn vị</div>
+        <div class="unit-btns" id="from-btns"></div>
+      </div>
+      <div class="unit-sel-spacer"></div>
+      <div class="unit-group">
+        <div class="unit-group-lbl">Sang đơn vị</div>
+        <div class="unit-btns" id="to-btns"></div>
+      </div>
+    </div>
+
+    <!-- Number input row -->
+    <div class="inp-row">
+      <div class="inp-group">
+        <div class="inp-lbl">
+          Nhập giá trị
+          <span class="unit-tag" id="from-tag">Mbps</span>
+        </div>
+        <input class="big-inp" id="inp-from" type="number" placeholder="0" min="0" step="any"
+               oninput="doConvert()" autocomplete="off">
+      </div>
+
+      <button class="swap-btn" onclick="swapUnits()" title="Đổi chiều">⇄</button>
+
+      <div class="inp-group">
+        <div class="inp-lbl">
+          Kết quả
+          <span class="unit-tag" id="to-tag">MB/s</span>
+        </div>
+        <input class="big-inp result-inp" id="inp-to" type="number" placeholder="0"
+               oninput="reverseConvert()" autocomplete="off">
+      </div>
+    </div>
+
+    <!-- Result strip -->
+    <div class="result-strip" id="result-strip">
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:4px;opacity:.7">Kết quả chuyển đổi</div>
+        <div class="res-main"><span id="res-num">—</span><span class="res-unit" id="res-unit"></span></div>
+      </div>
+      <div class="res-explain" id="res-explain"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ FORMULA ══ -->
+<div class="sec">Công thức chuyển đổi</div>
+<div class="formula-grid">
+  <div class="fbox">
+    <div class="fbox-label">Băng thông → Tốc độ file</div>
+    <div class="fbox-eq">
+      MB/s = <span class="hi">Mbps</span> ÷ 8<br>
+      GB/s = <span class="hi">Gbps</span> ÷ 8
+    </div>
+    <div class="fbox-desc">Vì 1 Byte = 8 bit. Khi nhà mạng nói "100 Mbps", tốc độ tải file thực tế tối đa là <strong>12.5 MB/s</strong>.</div>
+  </div>
+  <div class="fbox">
+    <div class="fbox-label">Tốc độ file → Băng thông</div>
+    <div class="fbox-eq">
+      Mbps = <span class="hi">MB/s</span> × 8<br>
+      Gbps = <span class="hi">GB/s</span> × 8
+    </div>
+    <div class="fbox-desc">Phần mềm tải về hiện "10 MB/s" nghĩa là đang dùng <strong>80 Mbps</strong> băng thông.</div>
+  </div>
+  <div class="fbox">
+    <div class="fbox-label">Quy đổi đơn vị dữ liệu</div>
+    <div class="fbox-eq">
+      1 KB = <span class="hi">1,000</span> B (SI)<br>
+      1 MB = <span class="hi">1,000</span> KB<br>
+      1 GB = <span class="hi">1,000</span> MB
+    </div>
+    <div class="fbox-desc">Chuẩn thập phân (SI / nhà mạng, nhà sx ổ cứng). 1 GB = 1,000,000,000 byte.</div>
+  </div>
+  <div class="fbox">
+    <div class="fbox-label">Chuẩn nhị phân (IEC)</div>
+    <div class="fbox-eq">
+      1 KiB = <span class="hi">1,024</span> B<br>
+      1 MiB = <span class="hi">1,024</span> KiB<br>
+      1 GiB = <span class="hi">1,024</span> MiB
+    </div>
+    <div class="fbox-desc">Windows dùng chuẩn này: ổ 1 TB thực tế chỉ hiện ~931 GiB trong Explorer.</div>
+  </div>
+</div>
+
+<!-- ══ CONVERSION TABLES ══ -->
+<div class="sec">Bảng quy đổi chi tiết</div>
+<div class="tbl-card">
+  <div class="tbl-tabs">
+    <button class="ttab on" onclick="switchTbl(0,this)">📁 MB ↔ GB ↔ KB ↔ TB</button>
+    <button class="ttab" onclick="switchTbl(1,this)">Mbps → MB/s & GB/s</button>
+    <button class="ttab" onclick="switchTbl(2,this)">Gbps → MB/s & GB/s</button>
+    <button class="ttab" onclick="switchTbl(3,this)">MB/s → Mbps & Gbps</button>
+    <button class="ttab" onclick="switchTbl(4,this)">Thời gian tải file</button>
+  </div>
+
+  <!-- TAB 0: MB ↔ GB (ưu tiên) -->
+  <div class="tbl-panel on" id="tbl-0">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Megabyte (MB)</th><th>Gigabyte (GB)</th><th>Kilobyte (KB)</th><th>Terabyte (TB)</th><th>Byte (B)</th></tr></thead>
+        <tbody>
+          <tr><td class="col-from mono">1 MB</td><td class="col-to mono">0.001 GB</td><td class="mono">1,000 KB</td><td class="mono col-note">0.000001 TB</td><td class="mono col-note">1,000,000 B</td></tr>
+          <tr><td class="col-from mono">10 MB</td><td class="col-to mono">0.01 GB</td><td class="mono">10,000 KB</td><td class="mono col-note">0.00001 TB</td><td class="mono col-note">10,000,000 B</td></tr>
+          <tr><td class="col-from mono">50 MB</td><td class="col-to mono">0.05 GB</td><td class="mono">50,000 KB</td><td class="mono col-note">0.00005 TB</td><td class="mono col-note">50,000,000 B</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">100 MB</td><td class="col-to mono">0.1 GB</td><td class="mono">100,000 KB</td><td class="mono col-note">0.0001 TB</td><td class="mono col-note">100,000,000 B</td></tr>
+          <tr><td class="col-from mono">256 MB</td><td class="col-to mono">0.256 GB</td><td class="mono">256,000 KB</td><td class="mono col-note">0.000256 TB</td><td class="mono col-note">256,000,000 B</td></tr>
+          <tr><td class="col-from mono">512 MB</td><td class="col-to mono">0.512 GB</td><td class="mono">512,000 KB</td><td class="mono col-note">0.000512 TB</td><td class="mono col-note">512,000,000 B</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">1,000 MB</td><td class="col-to mono">1 GB</td><td class="mono">1,000,000 KB</td><td class="mono col-note">0.001 TB</td><td class="mono col-note">1,000,000,000 B</td></tr>
+          <tr><td class="col-from mono">2,000 MB</td><td class="col-to mono">2 GB</td><td class="mono">2,000,000 KB</td><td class="mono col-note">0.002 TB</td><td class="mono col-note">2,000,000,000 B</td></tr>
+          <tr><td class="col-from mono">4,096 MB</td><td class="col-to mono">4.096 GB</td><td class="mono">4,096,000 KB</td><td class="mono col-note">0.004096 TB</td><td class="mono col-note">4,096,000,000 B</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">8,000 MB</td><td class="col-to mono">8 GB</td><td class="mono">8,000,000 KB</td><td class="mono col-note">0.008 TB</td><td class="mono col-note">8,000,000,000 B</td></tr>
+          <tr><td class="col-from mono">16,000 MB</td><td class="col-to mono">16 GB</td><td class="mono">16,000,000 KB</td><td class="mono col-note">0.016 TB</td><td class="mono col-note">16,000,000,000 B</td></tr>
+          <tr><td class="col-from mono">32,000 MB</td><td class="col-to mono">32 GB</td><td class="mono">32,000,000 KB</td><td class="mono col-note">0.032 TB</td><td class="mono col-note">32,000,000,000 B</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">64,000 MB</td><td class="col-to mono">64 GB</td><td class="mono">64,000,000 KB</td><td class="mono col-note">0.064 TB</td><td class="mono col-note">64,000,000,000 B</td></tr>
+          <tr><td class="col-from mono">128,000 MB</td><td class="col-to mono">128 GB</td><td class="mono">128,000,000 KB</td><td class="mono col-note">0.128 TB</td><td class="mono col-note">128,000,000,000 B</td></tr>
+          <tr><td class="col-from mono">256,000 MB</td><td class="col-to mono">256 GB</td><td class="mono">256,000,000 KB</td><td class="mono col-note">0.256 TB</td><td class="mono col-note">256,000,000,000 B</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">500,000 MB</td><td class="col-to mono">500 GB</td><td class="mono">500,000,000 KB</td><td class="mono col-note">0.5 TB</td><td class="mono col-note">500,000,000,000 B</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">1,000,000 MB</td><td class="col-to mono">1,000 GB</td><td class="mono">1,000,000,000 KB</td><td class="mono col-note">1 TB</td><td class="mono col-note">1,000,000,000,000 B</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:14px 20px;font-size:11.5px;color:var(--dim);border-top:1px solid var(--bd);">
+      ※ Chuẩn SI (thập phân): 1 GB = 1,000 MB = 1,000,000 KB = 1,000,000,000 B. Windows Explorer hiển thị theo chuẩn IEC (nhị phân): 1 GiB = 1,024 MiB — nên ổ cứng 1 TB hiện ~931 GB trong Windows.
+    </div>
+  </div>
+
+  <!-- TAB 1: Mbps → MB/s -->
+  <div class="tbl-panel" id="tbl-1">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Mbps (megabit/s)</th><th>MB/s (megabyte/s)</th><th>KB/s</th><th>Gbps</th><th>Thực tế</th></tr></thead>
+        <tbody>
+          <tr><td class="col-from mono">0.5 Mbps</td><td class="col-to mono">0.0625 MB/s</td><td class="mono">62.5 KB/s</td><td class="mono col-note">0.0005 Gbps</td><td class="col-note">3G cơ bản</td></tr>
+          <tr><td class="col-from mono">1 Mbps</td><td class="col-to mono">0.125 MB/s</td><td class="mono">125 KB/s</td><td class="mono col-note">0.001 Gbps</td><td class="col-note">Stream HD thấp</td></tr>
+          <tr><td class="col-from mono">5 Mbps</td><td class="col-to mono">0.625 MB/s</td><td class="mono">625 KB/s</td><td class="mono col-note">0.005 Gbps</td><td class="col-note">Netflix HD</td></tr>
+          <tr><td class="col-from mono">10 Mbps</td><td class="col-to mono">1.25 MB/s</td><td class="mono">1,250 KB/s</td><td class="mono col-note">0.01 Gbps</td><td class="col-note">4G trung bình</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">25 Mbps</td><td class="col-to mono">3.125 MB/s</td><td class="mono">3,125 KB/s</td><td class="mono col-note">0.025 Gbps</td><td class="col-note">Netflix 4K</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">100 Mbps</td><td class="col-to mono">12.5 MB/s</td><td class="mono">12,500 KB/s</td><td class="mono col-note">0.1 Gbps</td><td class="col-note">Cáp quang phổ biến</td></tr>
+          <tr><td class="col-from mono">200 Mbps</td><td class="col-to mono">25 MB/s</td><td class="mono">25,000 KB/s</td><td class="mono col-note">0.2 Gbps</td><td class="col-note">Cáp quang cao cấp</td></tr>
+          <tr><td class="col-from mono">300 Mbps</td><td class="col-to mono">37.5 MB/s</td><td class="mono">37,500 KB/s</td><td class="mono col-note">0.3 Gbps</td><td class="col-note">WiFi 5 GHz</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">500 Mbps</td><td class="col-to mono">62.5 MB/s</td><td class="mono">62,500 KB/s</td><td class="mono col-note">0.5 Gbps</td><td class="col-note">Cáp quang nhanh</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">1,000 Mbps</td><td class="col-to mono">125 MB/s</td><td class="mono">125,000 KB/s</td><td class="mono col-note">1 Gbps</td><td class="col-note">Gigabit Ethernet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: Gbps → MB/s -->
+  <div class="tbl-panel" id="tbl-2">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Gbps (gigabit/s)</th><th>MB/s (megabyte/s)</th><th>GB/s (gigabyte/s)</th><th>Mbps</th><th>Ứng dụng</th></tr></thead>
+        <tbody>
+          <tr class="highlight-row"><td class="col-from mono">1 Gbps</td><td class="col-to mono">125 MB/s</td><td class="mono">0.125 GB/s</td><td class="mono">1,000 Mbps</td><td class="col-note">Gigabit Ethernet / WiFi 6</td></tr>
+          <tr><td class="col-from mono">2.5 Gbps</td><td class="col-to mono">312.5 MB/s</td><td class="mono">0.3125 GB/s</td><td class="mono">2,500 Mbps</td><td class="col-note">Multi-Gigabit Ethernet</td></tr>
+          <tr><td class="col-from mono">5 Gbps</td><td class="col-to mono">625 MB/s</td><td class="mono">0.625 GB/s</td><td class="mono">5,000 Mbps</td><td class="col-note">USB 3.0 Gen 1</td></tr>
+          <tr><td class="col-from mono">10 Gbps</td><td class="col-to mono">1,250 MB/s</td><td class="mono">1.25 GB/s</td><td class="mono">10,000 Mbps</td><td class="col-note">10GbE / Datacenter</td></tr>
+          <tr><td class="col-from mono">20 Gbps</td><td class="col-to mono">2,500 MB/s</td><td class="mono">2.5 GB/s</td><td class="mono">20,000 Mbps</td><td class="col-note">USB 3.2 Gen 2x2</td></tr>
+          <tr><td class="col-from mono">40 Gbps</td><td class="col-to mono">5,000 MB/s</td><td class="mono">5 GB/s</td><td class="mono">40,000 Mbps</td><td class="col-note">Thunderbolt 3</td></tr>
+          <tr><td class="col-from mono">100 Gbps</td><td class="col-to mono">12,500 MB/s</td><td class="mono">12.5 GB/s</td><td class="mono">100,000 Mbps</td><td class="col-note">100GbE / Backbone ISP</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: MB/s → Mbps -->
+  <div class="tbl-panel" id="tbl-3">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>MB/s (megabyte/s)</th><th>Mbps (megabit/s)</th><th>Kbps</th><th>Gbps</th><th>Ghi chú</th></tr></thead>
+        <tbody>
+          <tr><td class="col-from mono">0.1 MB/s</td><td class="col-to mono">0.8 Mbps</td><td class="mono">800 Kbps</td><td class="mono col-note">0.0008 Gbps</td><td class="col-note">Tốc độ rất chậm</td></tr>
+          <tr><td class="col-from mono">0.5 MB/s</td><td class="col-to mono">4 Mbps</td><td class="mono">4,000 Kbps</td><td class="mono col-note">0.004 Gbps</td><td class="col-note">3G khá</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">1 MB/s</td><td class="col-to mono">8 Mbps</td><td class="mono">8,000 Kbps</td><td class="mono col-note">0.008 Gbps</td><td class="col-note">ADSL</td></tr>
+          <tr><td class="col-from mono">5 MB/s</td><td class="col-to mono">40 Mbps</td><td class="mono">40,000 Kbps</td><td class="mono col-note">0.04 Gbps</td><td class="col-note">4G tốt</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">12.5 MB/s</td><td class="col-to mono">100 Mbps</td><td class="mono">100,000 Kbps</td><td class="mono col-note">0.1 Gbps</td><td class="col-note">100 Mbps chuẩn</td></tr>
+          <tr><td class="col-from mono">25 MB/s</td><td class="col-to mono">200 Mbps</td><td class="mono">200,000 Kbps</td><td class="mono col-note">0.2 Gbps</td><td class="col-note">Cáp quang cao cấp</td></tr>
+          <tr class="highlight-row"><td class="col-from mono">125 MB/s</td><td class="col-to mono">1,000 Mbps</td><td class="mono">1,000,000 Kbps</td><td class="mono col-note">1 Gbps</td><td class="col-note">Gigabit</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 4: Download time -->
+  <div class="tbl-panel" id="tbl-4">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>File / Dung lượng</th><th>10 Mbps</th><th>100 Mbps</th><th>500 Mbps</th><th>1 Gbps</th></tr></thead>
+        <tbody>
+          <tr><td class="col-from">1 MB</td><td class="mono">0.8 giây</td><td class="mono col-note">0.08 giây</td><td class="mono col-note">0.016 giây</td><td class="mono col-note">0.008 giây</td></tr>
+          <tr><td class="col-from">10 MB</td><td class="mono">8 giây</td><td class="mono col-note">0.8 giây</td><td class="mono col-note">0.16 giây</td><td class="mono col-note">0.08 giây</td></tr>
+          <tr class="highlight-row"><td class="col-from">700 MB (film SD)</td><td class="mono">9 phút 20 giây</td><td class="mono">56 giây</td><td class="mono col-note">11.2 giây</td><td class="mono col-note">5.6 giây</td></tr>
+          <tr class="highlight-row"><td class="col-from">4 GB (4,000 MB)</td><td class="mono">53 phút 20 giây</td><td class="mono">5 phút 20 giây</td><td class="mono">64 giây</td><td class="mono col-note">32 giây</td></tr>
+          <tr><td class="col-from">8 GB (8,000 MB)</td><td class="mono">1 giờ 46 phút 40 giây</td><td class="mono">10 phút 40 giây</td><td class="mono">2 phút 8 giây</td><td class="mono">64 giây</td></tr>
+          <tr class="highlight-row"><td class="col-from">50 GB (50,000 MB)</td><td class="mono">11 giờ 6 phút 40 giây</td><td class="mono">1 giờ 6 phút 40 giây</td><td class="mono">13 phút 20 giây</td><td class="mono">6 phút 40 giây</td></tr>
+          <tr><td class="col-from">100 GB (100,000 MB)</td><td class="mono">22 giờ 13 phút 20 giây</td><td class="mono">2 giờ 13 phút 20 giây</td><td class="mono">26 phút 40 giây</td><td class="mono">13 phút 20 giây</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:14px 20px;font-size:11.5px;color:var(--dim);border-top:1px solid var(--bd);">
+      ※ Công thức: <strong>t (giây) = Dung lượng (MB) × 8 ÷ Tốc độ (Mbps)</strong>. Ví dụ: 4 GB @ 500 Mbps = 4,000 × 8 ÷ 500 = 64 giây. Tốc độ thực tế thường thấp hơn 10–20% do overhead mạng.
+    </div>
+  </div>
+</div>
+
+<!-- ══ EXAMPLES ══ -->
+<div class="sec">Ví dụ thực tế có lời giải</div>
+<div class="ex-grid">
+
+  <div class="ex-card" onclick="fillEx(100,'mbps','mbs')">
+    <div class="ex-card-head">
+      <div class="ex-ico" style="background:rgba(26,166,246,.1)">🌐</div>
+      <div>
+        <div class="ex-card-title">Gói Internet 100 Mbps</div>
+        <div class="ex-card-ctx">→ Tải file thực tế được bao nhiêu MB/s?</div>
+      </div>
+    </div>
+    <div class="ex-steps">
+      <div class="ex-step"><div class="ex-num">1</div><div>Nhà mạng cung cấp <strong>100 Mbps</strong> (megabit/giây)</div></div>
+      <div class="ex-step"><div class="ex-num">2</div><div>1 Byte = 8 bit → chia cho 8</div></div>
+      <div class="ex-step"><div class="ex-num">3</div><div>100 ÷ 8 = <strong>12.5 MB/s</strong></div></div>
+    </div>
+    <div class="ex-answer">✅ 100 Mbps = 12.5 MB/s tải file</div>
+  </div>
+
+  <div class="ex-card" onclick="fillEx(25,'mbs','mbps')">
+    <div class="ex-card-head">
+      <div class="ex-ico" style="background:rgba(11,196,122,.1)">📥</div>
+      <div>
+        <div class="ex-card-title">Phần mềm tải 25 MB/s</div>
+        <div class="ex-card-ctx">→ Đang dùng bao nhiêu Mbps băng thông?</div>
+      </div>
+    </div>
+    <div class="ex-steps">
+      <div class="ex-step"><div class="ex-num">1</div><div>Tốc độ tải hiện tại: <strong>25 MB/s</strong></div></div>
+      <div class="ex-step"><div class="ex-num">2</div><div>Nhân với 8 để ra megabit</div></div>
+      <div class="ex-step"><div class="ex-num">3</div><div>25 × 8 = <strong>200 Mbps</strong></div></div>
+    </div>
+    <div class="ex-answer">✅ 25 MB/s = 200 Mbps băng thông</div>
+  </div>
+
+  <div class="ex-card" onclick="fillEx(1,'gbps','gbs')">
+    <div class="ex-card-head">
+      <div class="ex-ico" style="background:rgba(124,92,191,.1)">⚡</div>
+      <div>
+        <div class="ex-card-title">Cáp Gigabit (1 Gbps)</div>
+        <div class="ex-card-ctx">→ Tải file tối đa bao nhiêu GB/s?</div>
+      </div>
+    </div>
+    <div class="ex-steps">
+      <div class="ex-step"><div class="ex-num">1</div><div>Gigabit Ethernet: <strong>1 Gbps</strong></div></div>
+      <div class="ex-step"><div class="ex-num">2</div><div>1 Gbps = 1,000 Mbps ÷ 8 = 125 MB/s</div></div>
+      <div class="ex-step"><div class="ex-num">3</div><div>125 MB/s = <strong>0.125 GB/s</strong></div></div>
+    </div>
+    <div class="ex-answer">✅ 1 Gbps = 125 MB/s = 0.125 GB/s</div>
+  </div>
+
+  <div class="ex-card" onclick="fillEx(500,'mbps','mbs')">
+    <div class="ex-card-head">
+      <div class="ex-ico" style="background:rgba(245,135,42,.1)">📡</div>
+      <div>
+        <div class="ex-card-title">WiFi 6 tốc độ 500 Mbps</div>
+        <div class="ex-card-ctx">→ Tải game 50 GB mất bao lâu?</div>
+      </div>
+    </div>
+    <div class="ex-steps">
+      <div class="ex-step"><div class="ex-num">1</div><div>500 Mbps ÷ 8 = <strong>62.5 MB/s</strong></div></div>
+      <div class="ex-step"><div class="ex-num">2</div><div>50 GB = 50,000 MB</div></div>
+      <div class="ex-step"><div class="ex-num">3</div><div>50,000 ÷ 62.5 = <strong>800 giây ≈ 13.3 phút</strong></div></div>
+    </div>
+    <div class="ex-answer">✅ 500 Mbps tải 50 GB game ≈ 13 phút</div>
+  </div>
+
+</div>
+
+<!-- ══ REAL WORLD SPEEDS ══ -->
+<div class="sec">Tốc độ mạng thực tế</div>
+<div class="speed-grid">
+  <div class="speed-card"><div class="speed-ico">📱</div><div><div class="speed-name">3G</div><div class="speed-val">0.5–7 Mbps</div><div class="speed-sub">0.06–0.875 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">📶</div><div><div class="speed-name">4G LTE</div><div class="speed-val">10–50 Mbps</div><div class="speed-sub">1.25–6.25 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">🚀</div><div><div class="speed-name">5G</div><div class="speed-val">100–1,000 Mbps</div><div class="speed-sub">12.5–125 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">🔌</div><div><div class="speed-name">ADSL (xDSL)</div><div class="speed-val">8–24 Mbps</div><div class="speed-sub">1–3 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">🌐</div><div><div class="speed-name">Cáp quang 100M</div><div class="speed-val">100 Mbps</div><div class="speed-sub">12.5 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">💫</div><div><div class="speed-name">Cáp quang 500M</div><div class="speed-val">500 Mbps</div><div class="speed-sub">62.5 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">⚡</div><div><div class="speed-name">Gigabit Ethernet</div><div class="speed-val">1,000 Mbps</div><div class="speed-sub">125 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">📡</div><div><div class="speed-name">WiFi 5 (802.11ac)</div><div class="speed-val">300–900 Mbps</div><div class="speed-sub">37.5–112.5 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">🛜</div><div><div class="speed-name">WiFi 6 (802.11ax)</div><div class="speed-val">600–9,600 Mbps</div><div class="speed-sub">75–1,200 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">🖥️</div><div><div class="speed-name">USB 3.0 (5 Gbps)</div><div class="speed-val">5,000 Mbps</div><div class="speed-sub">625 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">💾</div><div><div class="speed-name">NVMe SSD</div><div class="speed-val">~32,000 Mbps</div><div class="speed-sub">~4,000 MB/s</div></div></div>
+  <div class="speed-card"><div class="speed-ico">🏢</div><div><div class="speed-name">10GbE Datacenter</div><div class="speed-val">10,000 Mbps</div><div class="speed-sub">1,250 MB/s</div></div></div>
+</div>
+
+<!-- ══ QUICK REF ══ -->
+<div class="sec">Nhớ nhanh</div>
+<div class="ref-grid">
+  <div class="ref-card" style="--stripe:linear-gradient(90deg,#1aa6f6,#00c8e8)">
+    <div class="ref-card-ico">🔑</div>
+    <div class="ref-card-title">Quy tắc ÷8</div>
+    <div class="ref-card-val">Mbps ÷ 8 = MB/s</div>
+    <div class="ref-card-desc">Luôn chia 8 khi đổi bit→byte. Đây là quy tắc quan trọng nhất.</div>
+  </div>
+  <div class="ref-card" style="--stripe:linear-gradient(90deg,#0bc47a,#1aa6f6)">
+    <div class="ref-card-ico">💡</div>
+    <div class="ref-card-title">100 Mbps thực tế</div>
+    <div class="ref-card-val">= 12.5 MB/s</div>
+    <div class="ref-card-desc">Gói cáp quang phổ biến nhất Việt Nam. Tải file tối đa 12.5 MB mỗi giây.</div>
+  </div>
+  <div class="ref-card" style="--stripe:linear-gradient(90deg,#7c5cbf,#1aa6f6)">
+    <div class="ref-card-ico">⚡</div>
+    <div class="ref-card-title">1 Gbps = 1000 Mbps</div>
+    <div class="ref-card-val">= 125 MB/s</div>
+    <div class="ref-card-desc">Gigabit Ethernet — tốc độ tải file thực tế tối đa 125 MB/s.</div>
+  </div>
+  <div class="ref-card" style="--stripe:linear-gradient(90deg,#f5872a,#f04559)">
+    <div class="ref-card-ico">⚠️</div>
+    <div class="ref-card-title">Mbps ≠ MBps</div>
+    <div class="ref-card-val">b (thường) ≠ B (HOA)</div>
+    <div class="ref-card-desc">Chữ <strong>b</strong> nhỏ = bit. Chữ <strong>B</strong> hoa = Byte. Nhà mạng dùng Mbps, phần mềm hiện MB/s.</div>
+  </div>
+  <div class="ref-card" style="--stripe:linear-gradient(90deg,#00bcd4,#0bc47a)">
+    <div class="ref-card-ico">📊</div>
+    <div class="ref-card-title">SI vs IEC</div>
+    <div class="ref-card-val">1 GB ≠ 1 GiB</div>
+    <div class="ref-card-desc">1 GB (SI) = 1,000 MB. 1 GiB (IEC) = 1,024 MiB. Windows dùng GiB, nhà mạng dùng GB.</div>
+  </div>
+  <div class="ref-card" style="--stripe:linear-gradient(90deg,#f04559,#7c5cbf)">
+    <div class="ref-card-ico">🧮</div>
+    <div class="ref-card-title">Tính thời gian tải</div>
+    <div class="ref-card-val">t = Size×8 ÷ Mbps</div>
+    <div class="ref-card-desc">Ví dụ: 1 GB (1,000 MB) trên 100 Mbps = 1,000×8÷100 = <strong>80 giây</strong>.</div>
+  </div>
+</div>
+
+<footer>
+  © 2025 Chuyển Đổi Băng Thông · Tính theo chuẩn SI (thập phân): 1 KB = 1,000 B · 1 MB = 1,000 KB · 1 Mbps = 1,000,000 bit/s<br>
+  Công thức cốt lõi: <strong>Byte = bit ÷ 8</strong> · <strong>MB/s = Mbps ÷ 8</strong> · <strong>GB/s = Gbps ÷ 8</strong>
+</footer>
+
+</div><!-- /wrap -->
+
+<script>
+/* ══════════════════════════════════════════
+   UNIT DEFINITIONS
+   All values stored internally as bits/second (for speed) or bits (for data)
+   Base unit: bit
+══════════════════════════════════════════ */
+
+const UNITS = [
+  // ── Speed units (per second) ──
+  { id:'bps',   label:'bps',   name:'bit/giây',       group:'speed',  factor: 1 },
+  { id:'kbps',  label:'Kbps',  name:'kilobit/giây',   group:'speed',  factor: 1e3 },
+  { id:'mbps',  label:'Mbps',  name:'megabit/giây',   group:'speed',  factor: 1e6 },
+  { id:'gbps',  label:'Gbps',  name:'gigabit/giây',   group:'speed',  factor: 1e9 },
+  { id:'tbps',  label:'Tbps',  name:'terabit/giây',   group:'speed',  factor: 1e12 },
+
+  { id:'Bps',   label:'B/s',   name:'byte/giây',      group:'speed',  factor: 8 },
+  { id:'kBs',   label:'KB/s',  name:'kilobyte/giây',  group:'speed',  factor: 8e3 },
+  { id:'mbs',   label:'MB/s',  name:'megabyte/giây',  group:'speed',  factor: 8e6 },
+  { id:'gbs',   label:'GB/s',  name:'gigabyte/giây',  group:'speed',  factor: 8e9 },
+  { id:'tbs',   label:'TB/s',  name:'terabyte/giây',  group:'speed',  factor: 8e12 },
+
+  // ── Data units ──
+  { id:'bit',   label:'bit',   name:'bit',            group:'data',   factor: 1 },
+  { id:'byte',  label:'Byte',  name:'byte',           group:'data',   factor: 8 },
+  { id:'kb',    label:'Kb',    name:'kilobit',        group:'data',   factor: 1e3 },
+  { id:'kB',    label:'KB',    name:'kilobyte',       group:'data',   factor: 8e3 },
+  { id:'mb',    label:'Mb',    name:'megabit',        group:'data',   factor: 1e6 },
+  { id:'mB',    label:'MB',    name:'megabyte',       group:'data',   factor: 8e6 },
+  { id:'gb',    label:'Gb',    name:'gigabit',        group:'data',   factor: 1e9 },
+  { id:'gB',    label:'GB',    name:'gigabyte',       group:'data',   factor: 8e9 },
+  { id:'tb',    label:'Tb',    name:'terabit',        group:'data',   factor: 1e12 },
+  { id:'tB',    label:'TB',    name:'terabyte',       group:'data',   factor: 8e12 },
+];
+
+const SPEED_UNITS = UNITS.filter(u => u.group === 'speed');
+const DATA_UNITS  = UNITS.filter(u => u.group === 'data');
+
+// Default selections
+let fromId = 'mB';
+let toId   = 'gB';
+
+function getUnit(id) { return UNITS.find(u => u.id === id); }
+
+/* ── Build unit button grids ── */
+function buildBtns() {
+  const allGroups = [
+    { label:'📁 Dung lượng (byte) — ưu tiên', units: DATA_UNITS.filter(u => ['byte','kB','mB','gB','tB'].includes(u.id)) },
+    { label:'💾 Dung lượng (bit)', units: DATA_UNITS.filter(u => ['bit','kb','mb','gb','tb'].includes(u.id)) },
+    { label:'⚡ Tốc độ mạng (bit/s)', units: SPEED_UNITS.filter(u => ['bps','kbps','mbps','gbps','tbps'].includes(u.id)) },
+    { label:'📦 Tốc độ file (byte/s)', units: SPEED_UNITS.filter(u => ['Bps','kBs','mbs','gbs','tbs'].includes(u.id)) },
+  ];
+
+  ['from-btns','to-btns'].forEach(containerId => {
+    const wrap = document.getElementById(containerId);
+    const isFrom = containerId === 'from-btns';
+    wrap.innerHTML = '';
+    allGroups.forEach(grp => {
+      grp.units.forEach(u => {
+        const btn = document.createElement('button');
+        btn.className = 'ubtn' + ((isFrom ? fromId : toId) === u.id ? ' on' : '');
+        btn.textContent = u.label;
+        btn.title = u.name;
+        btn.onclick = () => {
+          if (isFrom) { fromId = u.id; } else { toId = u.id; }
+          buildBtns();
+          document.getElementById('from-tag').textContent = getUnit(fromId).label;
+          document.getElementById('to-tag').textContent   = getUnit(toId).label;
+          doConvert();
+        };
+        wrap.appendChild(btn);
+      });
+      // tiny spacer
+      const sp = document.createElement('div');
+      sp.style.cssText = 'width:100%;height:2px;';
+      wrap.appendChild(sp);
+    });
+  });
+}
+
+/* ── Exact rational arithmetic to avoid floating-point errors ──
+   Represent every conversion as: result = val * (fromFactor_num / fromFactor_den) / (toFactor_num / toFactor_den)
+   = val * fromFactor_num * toFactor_den / (fromFactor_den * toFactor_num)
+   
+   Since all our factors are of the form  a × 10^b  or  a × 8 × 10^b,
+   we can represent them as exact rationals with numerator/denominator.
+   We use BigInt for all arithmetic.
+──────────────────────────────────────────────────────────── */
+
+// Each unit factor expressed as { n: numerator, d: denominator } in bits (or bits/s)
+// factor = n/d  →  1 unit = n/d bits
+const UNIT_FACTORS = {
+  // Speed (bits/s)
+  'bps':  { n: 1n,          d: 1n },
+  'kbps': { n: 1000n,       d: 1n },
+  'mbps': { n: 1000000n,    d: 1n },
+  'gbps': { n: 1000000000n, d: 1n },
+  'tbps': { n: 1000000000000n, d: 1n },
+  // byte/s  (×8)
+  'Bps':  { n: 8n,           d: 1n },
+  'kBs':  { n: 8000n,        d: 1n },
+  'mbs':  { n: 8000000n,     d: 1n },
+  'gbs':  { n: 8000000000n,  d: 1n },
+  'tbs':  { n: 8000000000000n, d: 1n },
+  // Data (bits)
+  'bit':  { n: 1n,           d: 1n },
+  'byte': { n: 8n,           d: 1n },
+  'kb':   { n: 1000n,        d: 1n },
+  'kB':   { n: 8000n,        d: 1n },
+  'mb':   { n: 1000000n,     d: 1n },
+  'mB':   { n: 8000000n,     d: 1n },
+  'gb':   { n: 1000000000n,  d: 1n },
+  'gB':   { n: 8000000000n,  d: 1n },
+  'tb':   { n: 1000000000000n, d: 1n },
+  'tB':   { n: 8000000000000n, d: 1n },
+};
+
+// GCD for BigInt
+function gcd(a, b) {
+  a = a < 0n ? -a : a;
+  b = b < 0n ? -b : b;
+  while (b) { [a, b] = [b, a % b]; }
+  return a;
+}
+
+// Rational: { n: BigInt, d: BigInt }  (always positive d)
+function rat(n, d = 1n) {
+  if (d === 0n) throw new Error('div by zero');
+  if (d < 0n) { n = -n; d = -d; }
+  const g = gcd(n < 0n ? -n : n, d);
+  return { n: n / g, d: d / g };
+}
+function ratMul(a, b) { return rat(a.n * b.n, a.d * b.d); }
+function ratDiv(a, b) { return rat(a.n * b.d, a.d * b.n); }
+
+// Convert: val (number string) from → to, both same group
+// Returns exact rational or null if different groups
+function convertExact(valStr, fromId, toId) {
+  const fromU = getUnit(fromId);
+  const toU   = getUnit(toId);
+  if (fromU.group !== toU.group) return null;
+
+  // Parse input to rational: handle decimals exactly
+  // e.g. "12.5" → 125/10
+  const str = valStr.toString().trim();
+  let valRat;
+  const dotPos = str.indexOf('.');
+  if (dotPos === -1) {
+    valRat = rat(BigInt(str));
+  } else {
+    const decimals = str.length - dotPos - 1;
+    const intStr = str.replace('.', '');
+    const denom = 10n ** BigInt(decimals);
+    valRat = rat(BigInt(intStr), denom);
+  }
+
+  // result = val * fromFactor / toFactor
+  const ff = UNIT_FACTORS[fromId];
+  const tf = UNIT_FACTORS[toId];
+  // = valRat * (ff.n/ff.d) / (tf.n/tf.d)
+  // = valRat * ff.n * tf.d / (ff.d * tf.n)
+  const resultRat = ratDiv(ratMul(valRat, { n: ff.n, d: ff.d }), { n: tf.n, d: tf.d });
+  return resultRat;
+}
+
+// Format rational to clean decimal string
+function fmtRat(r) {
+  if (!r) return null;
+  const { n, d } = r;
+  if (n === 0n) return '0';
+
+  const negative = n < 0n;
+  const absN = negative ? -n : n;
+
+  // Integer part
+  const intPart = absN / d;
+  const remainder = absN % d;
+
+  if (remainder === 0n) {
+    return (negative ? '-' : '') + intPart.toString();
+  }
+
+  // Decimal part — compute up to 15 significant digits to avoid false precision
+  // Use long division
+  let decStr = '';
+  let rem = remainder;
+  const MAX_DEC = 15;
+  for (let i = 0; i < MAX_DEC && rem !== 0n; i++) {
+    rem *= 10n;
+    decStr += (rem / d).toString();
+    rem = rem % d;
+  }
+
+  // Trim trailing zeros
+  decStr = decStr.replace(/0+$/, '');
+
+  const result = (negative ? '-' : '') + intPart.toString() + (decStr ? '.' + decStr : '');
+
+  // If number is very small (< 0.000001) or very large (>= 1e12), use scientific notation
+  const absVal = Number(n) / Number(d);
+  if (absVal !== 0 && (absVal < 0.000001 || absVal >= 1e15)) {
+    return absVal.toPrecision(12).replace(/\.?0+$/, '');
+  }
+
+  return result;
+}
+
+// Legacy fmtNum kept for compatibility with tip functions
+function fmtNum(n) {
+  if (n === null || n === undefined || isNaN(n)) return null;
+  if (n === 0) return '0';
+  if (Math.abs(n) >= 1e15 || (Math.abs(n) < 1e-9 && n !== 0)) {
+    return n.toPrecision(10).replace(/\.?0+$/, '');
+  }
+  return parseFloat(n.toPrecision(12)).toString();
+}
+
+function doConvert() {
+  const rawStr = document.getElementById('inp-from').value.trim();
+  const fromU  = getUnit(fromId);
+  const toU    = getUnit(toId);
+
+  if (!rawStr || isNaN(parseFloat(rawStr))) {
+    document.getElementById('inp-to').value = '';
+    document.getElementById('result-strip').classList.remove('show');
+    return;
+  }
+
+  const resultRat = convertExact(rawStr, fromId, toId);
+  if (resultRat === null) {
+    document.getElementById('inp-to').value = '';
+    document.getElementById('result-strip').classList.remove('show');
+    showGroupError();
+    return;
+  }
+
+  const resultStr = fmtRat(resultRat);
+  document.getElementById('inp-to').value = resultStr;
+  const rawVal = parseFloat(rawStr);
+  const resultVal = Number(resultRat.n) / Number(resultRat.d);
+  showResult(rawVal, fromU, resultVal, toU, rawStr, resultStr);
+}
+
+function reverseConvert() {
+  const rawStr = document.getElementById('inp-to').value.trim();
+  const fromU  = getUnit(fromId);
+  const toU    = getUnit(toId);
+
+  if (!rawStr || isNaN(parseFloat(rawStr))) {
+    document.getElementById('inp-from').value = '';
+    document.getElementById('result-strip').classList.remove('show');
+    return;
+  }
+
+  const resultRat = convertExact(rawStr, toId, fromId);
+  if (resultRat === null) {
+    document.getElementById('inp-from').value = '';
+    return;
+  }
+
+  const resultStr = fmtRat(resultRat);
+  document.getElementById('inp-from').value = resultStr;
+  const rawVal = parseFloat(rawStr);
+  const resultVal = Number(resultRat.n) / Number(resultRat.d);
+  showResult(rawVal, toU, resultVal, fromU, rawStr, resultStr);
+}
+
+function showResult(val, fromU, resultVal, toU, valStr, resultStr) {
+  const strip = document.getElementById('result-strip');
+  strip.classList.add('show');
+  document.getElementById('res-num').textContent  = resultStr || fmtNum(resultVal);
+  document.getElementById('res-unit').textContent = ' ' + toU.label;
+
+  const vs = valStr || fmtNum(val);
+  const rs = resultStr || fmtNum(resultVal);
+
+  let exp = `<strong>${vs} ${fromU.label}</strong> (${fromU.name})`;
+  exp += ` = <strong>${rs} ${toU.label}</strong> (${toU.name})`;
+
+  const tips = buildTip(val, fromU, resultVal, toU);
+  if (tips) exp += `<br><span style="color:var(--dim);font-size:12px;margin-top:4px;display:block">${tips}</span>`;
+
+  document.getElementById('res-explain').innerHTML = exp;
+}
+
+function buildTip(val, fromU, result, toU) {
+  // MB ↔ GB
+  if (fromU.id === 'mB' && toU.id === 'gB') {
+    return `💡 ${fmtNum(val)} MB = ${fmtNum(result)} GB · Ví dụ: RAM 8 GB = 8,000 MB`;
+  }
+  if (fromU.id === 'gB' && toU.id === 'mB') {
+    return `💡 ${fmtNum(val)} GB = ${fmtNum(result)} MB · Ví dụ: Ổ cứng ${fmtNum(val)} GB = ${fmtNum(result)} MB`;
+  }
+  if (fromU.id === 'gB' && toU.id === 'kB') {
+    return `💡 ${fmtNum(val)} GB = ${fmtNum(result)} KB (chuẩn SI)`;
+  }
+  // Mbps → MB/s
+  if (fromU.id === 'mbps' && toU.id === 'mbs') {
+    return `💡 Gói Internet ${fmtNum(val)} Mbps → tải file tối đa ${fmtNum(result)} MB/s`;
+  }
+  if (fromU.id === 'mbs' && toU.id === 'mbps') {
+    return `💡 Tốc độ tải ${fmtNum(val)} MB/s tương đương đường truyền ${fmtNum(result)} Mbps`;
+  }
+  if (fromU.id === 'gbps' && toU.id === 'mbs') {
+    return `💡 ${fmtNum(val)} Gbps = ${fmtNum(result)} MB/s — tốc độ datacenter/NVMe`;
+  }
+  if (fromU.id === 'gbps' && toU.id === 'gbs') {
+    return `💡 Tốc độ lý thuyết ${fmtNum(val)} Gbps ≈ ${fmtNum(result)} GB/s thực tế`;
+  }
+  if (fromU.id === 'mbps' && toU.id === 'gbps') {
+    return `💡 ${fmtNum(val)} Mbps = ${fmtNum(result)} Gbps`;
+  }
+  return null;
+}
+
+function showGroupError() {
+  const strip = document.getElementById('result-strip');
+  strip.classList.add('show');
+  document.getElementById('res-num').textContent  = '—';
+  document.getElementById('res-unit').textContent = '';
+  document.getElementById('res-explain').innerHTML =
+    '⚠️ Không thể chuyển đổi giữa đơn vị <strong>tốc độ</strong> và <strong>dung lượng</strong>. Vui lòng chọn cùng loại đơn vị (tốc độ↔tốc độ, hoặc dung lượng↔dung lượng).';
+}
+
+/* ── Swap ── */
+function swapUnits() {
+  [fromId, toId] = [toId, fromId];
+  const vFrom = document.getElementById('inp-from').value;
+  const vTo   = document.getElementById('inp-to').value;
+  document.getElementById('inp-from').value = vTo;
+  document.getElementById('inp-to').value   = vFrom;
+  buildBtns();
+  document.getElementById('from-tag').textContent = getUnit(fromId).label;
+  document.getElementById('to-tag').textContent   = getUnit(toId).label;
+  if (vTo.trim()) doConvert();
+  else document.getElementById('result-strip').classList.remove('show');
+}
+
+/* ── Table tabs ── */
+function switchTbl(i, el) {
+  document.querySelectorAll('.tbl-panel').forEach((p,j) => p.classList.toggle('on', j===i));
+  document.querySelectorAll('.ttab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+}
+
+/* ── Fill from example ── */
+function fillEx(val, fId, tId) {
+  fromId = fId; toId = tId;
+  buildBtns();
+  document.getElementById('from-tag').textContent = getUnit(fromId).label;
+  document.getElementById('to-tag').textContent   = getUnit(toId).label;
+  document.getElementById('inp-from').value = val;
+  document.getElementById('inp-to').value   = '';
+  doConvert();
+  document.querySelector('.conv-card').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ── INIT ── */
+buildBtns();
+document.getElementById('from-tag').textContent = getUnit(fromId).label;
+document.getElementById('to-tag').textContent   = getUnit(toId).label;
+// Pre-fill a sample: 1000 MB → GB to show immediately
+document.getElementById('inp-from').value = 1000;
+doConvert();
+</script>
+</body>
+</html>
