@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chuyển Đổi Băng Thông & Dung Lượng Mạng</title>
 <link rel="icon" href="Chanh.png" type="image/x-icon">
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════
@@ -70,7 +71,7 @@ body {
 /* ── WRAP ── */
 .wrap {
   position: relative; z-index: 1;
-  max-width: 960px; margin: 0 auto;
+  max-width: 1100px; margin: 0 auto;
   padding: 48px 20px 100px;
 }
 
@@ -277,6 +278,11 @@ h1 em { color: var(--P); font-style: normal; }
   font-size: 13px; color: var(--sub); line-height: 1.7; flex: 1;
 }
 .res-explain strong { color: var(--tx); font-weight: 700; }
+.res-lbl-small {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--sub);
+  margin-bottom: 4px; opacity: .7;
+}
 
 /* ══════════════════════════════════════════
    QUICK REFERENCE CARDS
@@ -432,8 +438,61 @@ tbody tr:hover td { background: var(--s2); }
 }
 
 /* ══════════════════════════════════════════
-   REALWORLD SPEED TABLE
+   DUAL CONVERTER — 2-column side-by-side
 ══════════════════════════════════════════ */
+.dual-conv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Inside each card: unit buttons stack vertically (From / To each own row) */
+.unit-sel-col {
+  display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Input row inside narrow card: stack vertically */
+.inp-col {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 16px;
+}
+
+/* Compact swap button for narrow cards */
+.swap-btn-sm {
+  width: 100%; height: 36px; border-radius: 9px;
+  background: var(--surf); border: 1.5px solid var(--bd2);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all .22s; color: var(--P);
+  box-shadow: var(--sh); flex-shrink: 0;
+}
+.swap-btn-sm:hover {
+  background: var(--P); color: #fff; border-color: var(--P);
+  box-shadow: 0 3px 14px rgba(26,166,246,.28);
+}
+
+/* Compact conv-body padding */
+.dual-conv-grid .conv-body { padding: 20px 20px 18px; }
+.dual-conv-grid .conv-card-top { padding: 16px 20px 14px; }
+.dual-conv-grid .conv-card-sub { font-size: 11px; }
+
+/* Smaller number inputs inside narrow cards */
+.dual-conv-grid .big-inp {
+  font-size: 20px; padding: 12px 14px;
+}
+.dual-conv-grid .big-inp::placeholder { font-size: 14px; }
+
+/* Compact result strip */
+.dual-conv-grid .result-strip { padding: 14px 16px; gap: 10px; }
+.dual-conv-grid .res-main { font-size: clamp(1.4rem, 3vw, 2rem); }
+
+/* Responsive: stack to 1 column on mobile */
+@media (max-width: 720px) {
+  .dual-conv-grid { grid-template-columns: 1fr; gap: 14px; }
+  .dual-conv-grid .conv-body  { padding: 18px 16px; }
+  .dual-conv-grid .big-inp    { font-size: 22px; }
+}
 .speed-grid {
   display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
   gap: 10px;
@@ -629,9 +688,64 @@ footer {
   .concept-row { margin-bottom: 20px; }
   .sec   { margin: 28px 0 10px; }
 }
+/* ══════════════════════════════════════════
+   SITE NAV
+══════════════════════════════════════════ */
+.site-nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 4px;
+  padding: 9px 24px;
+  background: rgba(240,245,250,.88);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--bd2);
+  box-shadow: 0 1px 8px rgba(15,40,70,.07);
+}
+.nav-logo {
+  font-size: 15px; font-weight: 900; color: var(--P);
+  letter-spacing: -.4px; text-decoration: none;
+  display: flex; align-items: center; gap: 6px;
+  margin-right: 6px;
+}
+.nav-logo span { color: var(--tx); }
+.nav-sep { color: var(--bd2); font-size: 16px; font-weight: 300; margin: 0 2px; }
+.nav-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 13px; border-radius: 8px;
+  border: 1.5px solid transparent;
+  color: var(--sub); font-size: 12px; font-weight: 600;
+  text-decoration: none; letter-spacing: .2px;
+  transition: all .18s; white-space: nowrap;
+}
+.nav-link:hover {
+  color: var(--P);
+  border-color: var(--P-bd);
+  background: var(--P-bg);
+}
+.nav-link.active {
+  color: var(--P); border-color: var(--P-bd);
+  background: var(--P-bg); font-weight: 700;
+}
+.nav-spacer { flex: 1; }
+@media (max-width: 680px) {
+  .site-nav { padding: 8px 14px; gap: 2px; }
+  .nav-logo { font-size: 13.5px; }
+  .nav-link { font-size: 11px; padding: 4px 10px; }
+  .nav-sep  { margin: 0; }
+}
+@media (max-width: 380px) {
+  .nav-logo span { display: none; }
+  .nav-link { padding: 4px 8px; font-size: 10.5px; }
+}
 </style>
 </head>
 <body>
+
+<nav class="site-nav">
+  <a class="nav-logo" href="https://chanh.me" target="_blank">🍋<span>Chanh.me</span></a>
+  <span class="nav-sep">·</span>
+  <a class="nav-link" href="https://chanh.me" target="_blank">chanh.me</a>
+  <a class="nav-link active" href="https://convert.chanh.me" target="_blank">convert.chanh.me</a>
+</nav>
 
 <div class="bg-layer"></div>
 <div class="bg-grid"></div>
@@ -653,67 +767,97 @@ footer {
   <div class="cpill"><div class="cpill-dot" style="background:#7c5cbf"></div><strong>MB/s</strong>&nbsp;= megabyte/giây (tốc độ file)</div>
 </div>
 
-<!-- ══ MAIN CONVERTER ══ -->
+<!-- ══ DUAL CONVERTER GRID ══ -->
 <div class="sec">Công cụ chuyển đổi</div>
+<div class="dual-conv-grid">
 
-<div class="conv-card">
-  <div class="conv-card-top">
-    <div>
-      <div class="conv-card-title">📁 MB ↔ GB · Mbps ↔ MB/s và hơn thế</div>
-      <div class="conv-card-sub">Mặc định: MB → GB · Nhập giá trị để chuyển đổi tức thì</div>
-    </div>
-    <button class="conv-direction-btn" onclick="swapUnits()">⇄ Đổi chiều</button>
-  </div>
-
-  <div class="conv-body">
-
-    <!-- Unit selector -->
-    <div class="unit-sel-row">
-      <div class="unit-group">
-        <div class="unit-group-lbl">Từ đơn vị</div>
-        <div class="unit-btns" id="from-btns"></div>
-      </div>
-      <div class="unit-sel-spacer"></div>
-      <div class="unit-group">
-        <div class="unit-group-lbl">Sang đơn vị</div>
-        <div class="unit-btns" id="to-btns"></div>
-      </div>
-    </div>
-
-    <!-- Number input row -->
-    <div class="inp-row">
-      <div class="inp-group">
-        <div class="inp-lbl">
-          Nhập giá trị
-          <span class="unit-tag" id="from-tag">Mbps</span>
-        </div>
-        <input class="big-inp" id="inp-from" type="number" placeholder="0" min="0" step="any"
-               oninput="doConvert()" autocomplete="off">
-      </div>
-
-      <button class="swap-btn" onclick="swapUnits()" title="Đổi chiều">⇄</button>
-
-      <div class="inp-group">
-        <div class="inp-lbl">
-          Kết quả
-          <span class="unit-tag" id="to-tag">MB/s</span>
-        </div>
-        <input class="big-inp result-inp" id="inp-to" type="number" placeholder="0"
-               oninput="reverseConvert()" autocomplete="off">
-      </div>
-    </div>
-
-    <!-- Result strip -->
-    <div class="result-strip" id="result-strip">
+  <!-- CONVERTER 1: DATA -->
+  <div class="conv-card" id="card-data">
+    <div class="conv-card-top" style="background:linear-gradient(135deg,#1aa6f6 0%,#0bc47a 100%)">
       <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sub);margin-bottom:4px;opacity:.7">Kết quả chuyển đổi</div>
-        <div class="res-main"><span id="res-num">—</span><span class="res-unit" id="res-unit"></span></div>
+        <div class="conv-card-title">📁 Dung lượng lưu trữ</div>
+        <div class="conv-card-sub">MB · GB · KB · TB · Byte · bit</div>
       </div>
-      <div class="res-explain" id="res-explain"></div>
+      <button class="conv-direction-btn" onclick="swapUnits('data')">⇄</button>
     </div>
-
+    <div class="conv-body">
+      <div class="unit-sel-col">
+        <div class="unit-group">
+          <div class="unit-group-lbl">Từ đơn vị</div>
+          <div class="unit-btns" id="data-from-btns"></div>
+        </div>
+        <div class="unit-group">
+          <div class="unit-group-lbl">Sang đơn vị</div>
+          <div class="unit-btns" id="data-to-btns"></div>
+        </div>
+      </div>
+      <div class="inp-col">
+        <div class="inp-group">
+          <div class="inp-lbl">Nhập <span class="unit-tag" id="data-from-tag">MB</span></div>
+          <input class="big-inp" id="data-inp-from" type="number" placeholder="0" min="0" step="any"
+                 oninput="doConvert('data')" autocomplete="off">
+        </div>
+        <button class="swap-btn-sm" onclick="swapUnits('data')" title="Đổi chiều">⇄</button>
+        <div class="inp-group">
+          <div class="inp-lbl">Kết quả <span class="unit-tag" id="data-to-tag">GB</span></div>
+          <input class="big-inp result-inp" id="data-inp-to" type="number" placeholder="0"
+                 oninput="reverseConvert('data')" autocomplete="off">
+        </div>
+      </div>
+      <div class="result-strip" id="data-result-strip">
+        <div>
+          <div class="res-lbl-small">Kết quả</div>
+          <div class="res-main"><span id="data-res-num">—</span><span class="res-unit" id="data-res-unit"></span></div>
+        </div>
+        <div class="res-explain" id="data-res-explain"></div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <!-- CONVERTER 2: SPEED -->
+  <div class="conv-card" id="card-speed">
+    <div class="conv-card-top" style="background:linear-gradient(135deg,#1aa6f6 0%,#7c5cbf 100%)">
+      <div>
+        <div class="conv-card-title">⚡ Băng thông & Tốc độ mạng</div>
+        <div class="conv-card-sub">Mbps · Gbps · MB/s · GB/s · bps</div>
+      </div>
+      <button class="conv-direction-btn" onclick="swapUnits('speed')">⇄</button>
+    </div>
+    <div class="conv-body">
+      <div class="unit-sel-col">
+        <div class="unit-group">
+          <div class="unit-group-lbl">Từ đơn vị</div>
+          <div class="unit-btns" id="speed-from-btns"></div>
+        </div>
+        <div class="unit-group">
+          <div class="unit-group-lbl">Sang đơn vị</div>
+          <div class="unit-btns" id="speed-to-btns"></div>
+        </div>
+      </div>
+      <div class="inp-col">
+        <div class="inp-group">
+          <div class="inp-lbl">Nhập <span class="unit-tag" id="speed-from-tag">Mbps</span></div>
+          <input class="big-inp" id="speed-inp-from" type="number" placeholder="0" min="0" step="any"
+                 oninput="doConvert('speed')" autocomplete="off">
+        </div>
+        <button class="swap-btn-sm" onclick="swapUnits('speed')" title="Đổi chiều">⇄</button>
+        <div class="inp-group">
+          <div class="inp-lbl">Kết quả <span class="unit-tag" id="speed-to-tag">MB/s</span></div>
+          <input class="big-inp result-inp" id="speed-inp-to" type="number" placeholder="0"
+                 oninput="reverseConvert('speed')" autocomplete="off">
+        </div>
+      </div>
+      <div class="result-strip" id="speed-result-strip">
+        <div>
+          <div class="res-lbl-small">Kết quả</div>
+          <div class="res-main"><span id="speed-res-num">—</span><span class="res-unit" id="speed-res-unit"></span></div>
+        </div>
+        <div class="res-explain" id="speed-res-explain"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /dual-conv-grid -->
 
 <!-- ══ FORMULA ══ -->
 <div class="sec">Công thức chuyển đổi</div>
@@ -879,7 +1023,7 @@ footer {
 <div class="sec">Ví dụ thực tế có lời giải</div>
 <div class="ex-grid">
 
-  <div class="ex-card" onclick="fillEx(100,'mbps','mbs')">
+  <div class="ex-card" onclick="fillEx('speed',100,'mbps','mbs')">
     <div class="ex-card-head">
       <div class="ex-ico" style="background:rgba(26,166,246,.1)">🌐</div>
       <div>
@@ -895,7 +1039,7 @@ footer {
     <div class="ex-answer">✅ 100 Mbps = 12.5 MB/s tải file</div>
   </div>
 
-  <div class="ex-card" onclick="fillEx(25,'mbs','mbps')">
+  <div class="ex-card" onclick="fillEx('speed',25,'mbs','mbps')">
     <div class="ex-card-head">
       <div class="ex-ico" style="background:rgba(11,196,122,.1)">📥</div>
       <div>
@@ -911,7 +1055,7 @@ footer {
     <div class="ex-answer">✅ 25 MB/s = 200 Mbps băng thông</div>
   </div>
 
-  <div class="ex-card" onclick="fillEx(1,'gbps','gbs')">
+  <div class="ex-card" onclick="fillEx('speed',1,'gbps','gbs')">
     <div class="ex-card-head">
       <div class="ex-ico" style="background:rgba(124,92,191,.1)">⚡</div>
       <div>
@@ -927,7 +1071,7 @@ footer {
     <div class="ex-answer">✅ 1 Gbps = 125 MB/s = 0.125 GB/s</div>
   </div>
 
-  <div class="ex-card" onclick="fillEx(500,'mbps','mbs')">
+  <div class="ex-card" onclick="fillEx('speed',500,'mbps','mbs')">
     <div class="ex-card-head">
       <div class="ex-ico" style="background:rgba(245,135,42,.1)">📡</div>
       <div>
@@ -1011,368 +1155,220 @@ footer {
 </div><!-- /wrap -->
 
 <script>
-/* ══════════════════════════════════════════
-   UNIT DEFINITIONS
-   All values stored internally as bits/second (for speed) or bits (for data)
-   Base unit: bit
-══════════════════════════════════════════ */
-
 const UNITS = [
-  // ── Speed units (per second) ──
-  { id:'bps',   label:'bps',   name:'bit/giây',       group:'speed',  factor: 1 },
-  { id:'kbps',  label:'Kbps',  name:'kilobit/giây',   group:'speed',  factor: 1e3 },
-  { id:'mbps',  label:'Mbps',  name:'megabit/giây',   group:'speed',  factor: 1e6 },
-  { id:'gbps',  label:'Gbps',  name:'gigabit/giây',   group:'speed',  factor: 1e9 },
-  { id:'tbps',  label:'Tbps',  name:'terabit/giây',   group:'speed',  factor: 1e12 },
-
-  { id:'Bps',   label:'B/s',   name:'byte/giây',      group:'speed',  factor: 8 },
-  { id:'kBs',   label:'KB/s',  name:'kilobyte/giây',  group:'speed',  factor: 8e3 },
-  { id:'mbs',   label:'MB/s',  name:'megabyte/giây',  group:'speed',  factor: 8e6 },
-  { id:'gbs',   label:'GB/s',  name:'gigabyte/giây',  group:'speed',  factor: 8e9 },
-  { id:'tbs',   label:'TB/s',  name:'terabyte/giây',  group:'speed',  factor: 8e12 },
-
-  // ── Data units ──
-  { id:'bit',   label:'bit',   name:'bit',            group:'data',   factor: 1 },
-  { id:'byte',  label:'Byte',  name:'byte',           group:'data',   factor: 8 },
-  { id:'kb',    label:'Kb',    name:'kilobit',        group:'data',   factor: 1e3 },
-  { id:'kB',    label:'KB',    name:'kilobyte',       group:'data',   factor: 8e3 },
-  { id:'mb',    label:'Mb',    name:'megabit',        group:'data',   factor: 1e6 },
-  { id:'mB',    label:'MB',    name:'megabyte',       group:'data',   factor: 8e6 },
-  { id:'gb',    label:'Gb',    name:'gigabit',        group:'data',   factor: 1e9 },
-  { id:'gB',    label:'GB',    name:'gigabyte',       group:'data',   factor: 8e9 },
-  { id:'tb',    label:'Tb',    name:'terabit',        group:'data',   factor: 1e12 },
-  { id:'tB',    label:'TB',    name:'terabyte',       group:'data',   factor: 8e12 },
+  { id:'bps',   label:'bps',   name:'bit/giây',       group:'speed' },
+  { id:'kbps',  label:'Kbps',  name:'kilobit/giây',   group:'speed' },
+  { id:'mbps',  label:'Mbps',  name:'megabit/giây',   group:'speed' },
+  { id:'gbps',  label:'Gbps',  name:'gigabit/giây',   group:'speed' },
+  { id:'tbps',  label:'Tbps',  name:'terabit/giây',   group:'speed' },
+  { id:'Bps',   label:'B/s',   name:'byte/giây',      group:'speed' },
+  { id:'kBs',   label:'KB/s',  name:'kilobyte/giây',  group:'speed' },
+  { id:'mbs',   label:'MB/s',  name:'megabyte/giây',  group:'speed' },
+  { id:'gbs',   label:'GB/s',  name:'gigabyte/giây',  group:'speed' },
+  { id:'tbs',   label:'TB/s',  name:'terabyte/giây',  group:'speed' },
+  { id:'bit',   label:'bit',   name:'bit',            group:'data' },
+  { id:'byte',  label:'Byte',  name:'byte',           group:'data' },
+  { id:'kb',    label:'Kb',    name:'kilobit',        group:'data' },
+  { id:'kB',    label:'KB',    name:'kilobyte',       group:'data' },
+  { id:'mb',    label:'Mb',    name:'megabit',        group:'data' },
+  { id:'mB',    label:'MB',    name:'megabyte',       group:'data' },
+  { id:'gb',    label:'Gb',    name:'gigabit',        group:'data' },
+  { id:'gB',    label:'GB',    name:'gigabyte',       group:'data' },
+  { id:'tb',    label:'Tb',    name:'terabit',        group:'data' },
+  { id:'tB',    label:'TB',    name:'terabyte',       group:'data' },
 ];
-
-const SPEED_UNITS = UNITS.filter(u => u.group === 'speed');
-const DATA_UNITS  = UNITS.filter(u => u.group === 'data');
-
-// Default selections
-let fromId = 'mB';
-let toId   = 'gB';
 
 function getUnit(id) { return UNITS.find(u => u.id === id); }
 
-/* ── Build unit button grids ── */
-function buildBtns() {
-  const allGroups = [
-    { label:'📁 Dung lượng (byte) — ưu tiên', units: DATA_UNITS.filter(u => ['byte','kB','mB','gB','tB'].includes(u.id)) },
-    { label:'💾 Dung lượng (bit)', units: DATA_UNITS.filter(u => ['bit','kb','mb','gb','tb'].includes(u.id)) },
-    { label:'⚡ Tốc độ mạng (bit/s)', units: SPEED_UNITS.filter(u => ['bps','kbps','mbps','gbps','tbps'].includes(u.id)) },
-    { label:'📦 Tốc độ file (byte/s)', units: SPEED_UNITS.filter(u => ['Bps','kBs','mbs','gbs','tbs'].includes(u.id)) },
-  ];
+const state = {
+  data:  { fromId: 'mB',   toId: 'gB'   },
+  speed: { fromId: 'mbps', toId: 'mbs'  },
+};
 
-  ['from-btns','to-btns'].forEach(containerId => {
-    const wrap = document.getElementById(containerId);
-    const isFrom = containerId === 'from-btns';
+const CONV_GROUPS = {
+  data: [
+    { ids: ['byte','kB','mB','gB','tB'] },
+    { ids: ['bit','kb','mb','gb','tb']  },
+  ],
+  speed: [
+    { ids: ['bps','kbps','mbps','gbps','tbps']  },
+    { ids: ['Bps','kBs','mbs','gbs','tbs'] },
+  ],
+};
+
+function buildBtns(conv) {
+  const st = state[conv];
+  ['from','to'].forEach(side => {
+    const wrap = document.getElementById(`${conv}-${side}-btns`);
     wrap.innerHTML = '';
-    allGroups.forEach(grp => {
-      grp.units.forEach(u => {
+    CONV_GROUPS[conv].forEach((grp, gi) => {
+      grp.ids.forEach(id => {
+        const u = getUnit(id);
         const btn = document.createElement('button');
-        btn.className = 'ubtn' + ((isFrom ? fromId : toId) === u.id ? ' on' : '');
+        btn.className = 'ubtn' + ((side==='from' ? st.fromId : st.toId)===id ? ' on' : '');
         btn.textContent = u.label;
         btn.title = u.name;
         btn.onclick = () => {
-          if (isFrom) { fromId = u.id; } else { toId = u.id; }
-          buildBtns();
-          document.getElementById('from-tag').textContent = getUnit(fromId).label;
-          document.getElementById('to-tag').textContent   = getUnit(toId).label;
-          doConvert();
+          if (side==='from') st.fromId = id; else st.toId = id;
+          buildBtns(conv);
+          document.getElementById(`${conv}-from-tag`).textContent = getUnit(st.fromId).label;
+          document.getElementById(`${conv}-to-tag`).textContent   = getUnit(st.toId).label;
+          doConvert(conv);
         };
         wrap.appendChild(btn);
       });
-      // tiny spacer
-      const sp = document.createElement('div');
-      sp.style.cssText = 'width:100%;height:2px;';
-      wrap.appendChild(sp);
+      if (gi < CONV_GROUPS[conv].length - 1) {
+        const sp = document.createElement('div');
+        sp.style.cssText = 'width:100%;height:4px;';
+        wrap.appendChild(sp);
+      }
     });
   });
 }
 
-/* ── Exact rational arithmetic to avoid floating-point errors ──
-   Represent every conversion as: result = val * (fromFactor_num / fromFactor_den) / (toFactor_num / toFactor_den)
-   = val * fromFactor_num * toFactor_den / (fromFactor_den * toFactor_num)
-   
-   Since all our factors are of the form  a × 10^b  or  a × 8 × 10^b,
-   we can represent them as exact rationals with numerator/denominator.
-   We use BigInt for all arithmetic.
-──────────────────────────────────────────────────────────── */
-
-// Each unit factor expressed as { n: numerator, d: denominator } in bits (or bits/s)
-// factor = n/d  →  1 unit = n/d bits
-const UNIT_FACTORS = {
-  // Speed (bits/s)
-  'bps':  { n: 1n,          d: 1n },
-  'kbps': { n: 1000n,       d: 1n },
-  'mbps': { n: 1000000n,    d: 1n },
-  'gbps': { n: 1000000000n, d: 1n },
-  'tbps': { n: 1000000000000n, d: 1n },
-  // byte/s  (×8)
-  'Bps':  { n: 8n,           d: 1n },
-  'kBs':  { n: 8000n,        d: 1n },
-  'mbs':  { n: 8000000n,     d: 1n },
-  'gbs':  { n: 8000000000n,  d: 1n },
-  'tbs':  { n: 8000000000000n, d: 1n },
-  // Data (bits)
-  'bit':  { n: 1n,           d: 1n },
-  'byte': { n: 8n,           d: 1n },
-  'kb':   { n: 1000n,        d: 1n },
-  'kB':   { n: 8000n,        d: 1n },
-  'mb':   { n: 1000000n,     d: 1n },
-  'mB':   { n: 8000000n,     d: 1n },
-  'gb':   { n: 1000000000n,  d: 1n },
-  'gB':   { n: 8000000000n,  d: 1n },
-  'tb':   { n: 1000000000000n, d: 1n },
-  'tB':   { n: 8000000000000n, d: 1n },
+/* ── Exact rational arithmetic (BigInt) ── */
+const UF = {
+  'bps': {n:1n,d:1n}, 'kbps':{n:1000n,d:1n}, 'mbps':{n:1000000n,d:1n},
+  'gbps':{n:1000000000n,d:1n}, 'tbps':{n:1000000000000n,d:1n},
+  'Bps':{n:8n,d:1n}, 'kBs':{n:8000n,d:1n}, 'mbs':{n:8000000n,d:1n},
+  'gbs':{n:8000000000n,d:1n}, 'tbs':{n:8000000000000n,d:1n},
+  'bit':{n:1n,d:1n}, 'byte':{n:8n,d:1n}, 'kb':{n:1000n,d:1n},
+  'kB':{n:8000n,d:1n}, 'mb':{n:1000000n,d:1n}, 'mB':{n:8000000n,d:1n},
+  'gb':{n:1000000000n,d:1n}, 'gB':{n:8000000000n,d:1n},
+  'tb':{n:1000000000000n,d:1n}, 'tB':{n:8000000000000n,d:1n},
 };
 
-// GCD for BigInt
-function gcd(a, b) {
-  a = a < 0n ? -a : a;
-  b = b < 0n ? -b : b;
-  while (b) { [a, b] = [b, a % b]; }
-  return a;
-}
+function gcd(a,b){a=a<0n?-a:a;b=b<0n?-b:b;while(b){[a,b]=[b,a%b];}return a;}
+function rat(n,d=1n){if(d<0n){n=-n;d=-d;}const g=gcd(n<0n?-n:n,d);return{n:n/g,d:d/g};}
+function rMul(a,b){return rat(a.n*b.n,a.d*b.d);}
+function rDiv(a,b){return rat(a.n*b.d,a.d*b.n);}
 
-// Rational: { n: BigInt, d: BigInt }  (always positive d)
-function rat(n, d = 1n) {
-  if (d === 0n) throw new Error('div by zero');
-  if (d < 0n) { n = -n; d = -d; }
-  const g = gcd(n < 0n ? -n : n, d);
-  return { n: n / g, d: d / g };
-}
-function ratMul(a, b) { return rat(a.n * b.n, a.d * b.d); }
-function ratDiv(a, b) { return rat(a.n * b.d, a.d * b.n); }
-
-// Convert: val (number string) from → to, both same group
-// Returns exact rational or null if different groups
 function convertExact(valStr, fromId, toId) {
-  const fromU = getUnit(fromId);
-  const toU   = getUnit(toId);
-  if (fromU.group !== toU.group) return null;
-
-  // Parse input to rational: handle decimals exactly
-  // e.g. "12.5" → 125/10
-  const str = valStr.toString().trim();
-  let valRat;
-  const dotPos = str.indexOf('.');
-  if (dotPos === -1) {
-    valRat = rat(BigInt(str));
-  } else {
-    const decimals = str.length - dotPos - 1;
-    const intStr = str.replace('.', '');
-    const denom = 10n ** BigInt(decimals);
-    valRat = rat(BigInt(intStr), denom);
-  }
-
-  // result = val * fromFactor / toFactor
-  const ff = UNIT_FACTORS[fromId];
-  const tf = UNIT_FACTORS[toId];
-  // = valRat * (ff.n/ff.d) / (tf.n/tf.d)
-  // = valRat * ff.n * tf.d / (ff.d * tf.n)
-  const resultRat = ratDiv(ratMul(valRat, { n: ff.n, d: ff.d }), { n: tf.n, d: tf.d });
-  return resultRat;
+  if (getUnit(fromId).group !== getUnit(toId).group) return null;
+  const s = valStr.toString().trim();
+  const dot = s.indexOf('.');
+  const valRat = dot===-1
+    ? rat(BigInt(s))
+    : rat(BigInt(s.replace('.','')), 10n**BigInt(s.length-dot-1));
+  return rDiv(rMul(valRat, UF[fromId]), UF[toId]);
 }
 
-// Format rational to clean decimal string
 function fmtRat(r) {
   if (!r) return null;
-  const { n, d } = r;
-  if (n === 0n) return '0';
-
-  const negative = n < 0n;
-  const absN = negative ? -n : n;
-
-  // Integer part
-  const intPart = absN / d;
-  const remainder = absN % d;
-
-  if (remainder === 0n) {
-    return (negative ? '-' : '') + intPart.toString();
-  }
-
-  // Decimal part — compute up to 15 significant digits to avoid false precision
-  // Use long division
-  let decStr = '';
-  let rem = remainder;
-  const MAX_DEC = 15;
-  for (let i = 0; i < MAX_DEC && rem !== 0n; i++) {
-    rem *= 10n;
-    decStr += (rem / d).toString();
-    rem = rem % d;
-  }
-
-  // Trim trailing zeros
-  decStr = decStr.replace(/0+$/, '');
-
-  const result = (negative ? '-' : '') + intPart.toString() + (decStr ? '.' + decStr : '');
-
-  // If number is very small (< 0.000001) or very large (>= 1e12), use scientific notation
-  const absVal = Number(n) / Number(d);
-  if (absVal !== 0 && (absVal < 0.000001 || absVal >= 1e15)) {
-    return absVal.toPrecision(12).replace(/\.?0+$/, '');
-  }
-
-  return result;
+  const {n,d} = r;
+  if (n===0n) return '0';
+  const neg=n<0n, absN=neg?-n:n;
+  const ip=absN/d, rem=absN%d;
+  if (rem===0n) return (neg?'-':'')+ip.toString();
+  let dec='', rm=rem;
+  for(let i=0;i<15&&rm!==0n;i++){rm*=10n;dec+=(rm/d).toString();rm=rm%d;}
+  dec=dec.replace(/0+$/,'');
+  const av=Number(n)/Number(d);
+  if(av!==0&&(av<1e-9||av>=1e15)) return av.toPrecision(10).replace(/\.?0+$/,'');
+  return (neg?'-':'')+ip.toString()+(dec?'.'+dec:'');
 }
 
-// Legacy fmtNum kept for compatibility with tip functions
-function fmtNum(n) {
-  if (n === null || n === undefined || isNaN(n)) return null;
-  if (n === 0) return '0';
-  if (Math.abs(n) >= 1e15 || (Math.abs(n) < 1e-9 && n !== 0)) {
-    return n.toPrecision(10).replace(/\.?0+$/, '');
-  }
-  return parseFloat(n.toPrecision(12)).toString();
-}
-
-function doConvert() {
-  const rawStr = document.getElementById('inp-from').value.trim();
-  const fromU  = getUnit(fromId);
-  const toU    = getUnit(toId);
-
-  if (!rawStr || isNaN(parseFloat(rawStr))) {
-    document.getElementById('inp-to').value = '';
-    document.getElementById('result-strip').classList.remove('show');
+function doConvert(conv) {
+  const st = state[conv];
+  const raw = document.getElementById(`${conv}-inp-from`).value.trim();
+  if (!raw || isNaN(parseFloat(raw))) {
+    document.getElementById(`${conv}-inp-to`).value='';
+    document.getElementById(`${conv}-result-strip`).classList.remove('show');
     return;
   }
-
-  const resultRat = convertExact(rawStr, fromId, toId);
-  if (resultRat === null) {
-    document.getElementById('inp-to').value = '';
-    document.getElementById('result-strip').classList.remove('show');
-    showGroupError();
-    return;
-  }
-
-  const resultStr = fmtRat(resultRat);
-  document.getElementById('inp-to').value = resultStr;
-  const rawVal = parseFloat(rawStr);
-  const resultVal = Number(resultRat.n) / Number(resultRat.d);
-  showResult(rawVal, fromU, resultVal, toU, rawStr, resultStr);
+  try {
+    const r = convertExact(raw, st.fromId, st.toId);
+    if (!r) { showGroupError(conv); return; }
+    const rs = fmtRat(r);
+    document.getElementById(`${conv}-inp-to`).value = rs;
+    showResult(conv, raw, st.fromId, rs, st.toId);
+  } catch(e) { document.getElementById(`${conv}-inp-to`).value=''; }
 }
 
-function reverseConvert() {
-  const rawStr = document.getElementById('inp-to').value.trim();
-  const fromU  = getUnit(fromId);
-  const toU    = getUnit(toId);
-
-  if (!rawStr || isNaN(parseFloat(rawStr))) {
-    document.getElementById('inp-from').value = '';
-    document.getElementById('result-strip').classList.remove('show');
+function reverseConvert(conv) {
+  const st = state[conv];
+  const raw = document.getElementById(`${conv}-inp-to`).value.trim();
+  if (!raw || isNaN(parseFloat(raw))) {
+    document.getElementById(`${conv}-inp-from`).value='';
+    document.getElementById(`${conv}-result-strip`).classList.remove('show');
     return;
   }
-
-  const resultRat = convertExact(rawStr, toId, fromId);
-  if (resultRat === null) {
-    document.getElementById('inp-from').value = '';
-    return;
-  }
-
-  const resultStr = fmtRat(resultRat);
-  document.getElementById('inp-from').value = resultStr;
-  const rawVal = parseFloat(rawStr);
-  const resultVal = Number(resultRat.n) / Number(resultRat.d);
-  showResult(rawVal, toU, resultVal, fromU, rawStr, resultStr);
+  try {
+    const r = convertExact(raw, st.toId, st.fromId);
+    if (!r) return;
+    const rs = fmtRat(r);
+    document.getElementById(`${conv}-inp-from`).value = rs;
+    showResult(conv, raw, st.toId, rs, st.fromId);
+  } catch(e) {}
 }
 
-function showResult(val, fromU, resultVal, toU, valStr, resultStr) {
-  const strip = document.getElementById('result-strip');
-  strip.classList.add('show');
-  document.getElementById('res-num').textContent  = resultStr || fmtNum(resultVal);
-  document.getElementById('res-unit').textContent = ' ' + toU.label;
-
-  const vs = valStr || fmtNum(val);
-  const rs = resultStr || fmtNum(resultVal);
-
-  let exp = `<strong>${vs} ${fromU.label}</strong> (${fromU.name})`;
-  exp += ` = <strong>${rs} ${toU.label}</strong> (${toU.name})`;
-
-  const tips = buildTip(val, fromU, resultVal, toU);
-  if (tips) exp += `<br><span style="color:var(--dim);font-size:12px;margin-top:4px;display:block">${tips}</span>`;
-
-  document.getElementById('res-explain').innerHTML = exp;
+function showResult(conv, valStr, fromId, resultStr, toId) {
+  const fromU=getUnit(fromId), toU=getUnit(toId);
+  document.getElementById(`${conv}-result-strip`).classList.add('show');
+  document.getElementById(`${conv}-res-num`).textContent  = resultStr;
+  document.getElementById(`${conv}-res-unit`).textContent = ' '+toU.label;
+  let exp = `<strong>${valStr} ${fromU.label}</strong> (${fromU.name}) = <strong>${resultStr} ${toU.label}</strong> (${toU.name})`;
+  const tip = buildTip(parseFloat(valStr), fromId, parseFloat(resultStr), toId);
+  if (tip) exp += `<br><span style="color:var(--dim);font-size:12px;margin-top:4px;display:block">${tip}</span>`;
+  document.getElementById(`${conv}-res-explain`).innerHTML = exp;
 }
 
-function buildTip(val, fromU, result, toU) {
-  // MB ↔ GB
-  if (fromU.id === 'mB' && toU.id === 'gB') {
-    return `💡 ${fmtNum(val)} MB = ${fmtNum(result)} GB · Ví dụ: RAM 8 GB = 8,000 MB`;
-  }
-  if (fromU.id === 'gB' && toU.id === 'mB') {
-    return `💡 ${fmtNum(val)} GB = ${fmtNum(result)} MB · Ví dụ: Ổ cứng ${fmtNum(val)} GB = ${fmtNum(result)} MB`;
-  }
-  if (fromU.id === 'gB' && toU.id === 'kB') {
-    return `💡 ${fmtNum(val)} GB = ${fmtNum(result)} KB (chuẩn SI)`;
-  }
-  // Mbps → MB/s
-  if (fromU.id === 'mbps' && toU.id === 'mbs') {
-    return `💡 Gói Internet ${fmtNum(val)} Mbps → tải file tối đa ${fmtNum(result)} MB/s`;
-  }
-  if (fromU.id === 'mbs' && toU.id === 'mbps') {
-    return `💡 Tốc độ tải ${fmtNum(val)} MB/s tương đương đường truyền ${fmtNum(result)} Mbps`;
-  }
-  if (fromU.id === 'gbps' && toU.id === 'mbs') {
-    return `💡 ${fmtNum(val)} Gbps = ${fmtNum(result)} MB/s — tốc độ datacenter/NVMe`;
-  }
-  if (fromU.id === 'gbps' && toU.id === 'gbs') {
-    return `💡 Tốc độ lý thuyết ${fmtNum(val)} Gbps ≈ ${fmtNum(result)} GB/s thực tế`;
-  }
-  if (fromU.id === 'mbps' && toU.id === 'gbps') {
-    return `💡 ${fmtNum(val)} Mbps = ${fmtNum(result)} Gbps`;
-  }
+function showGroupError(conv) {
+  document.getElementById(`${conv}-result-strip`).classList.add('show');
+  document.getElementById(`${conv}-res-num`).textContent='—';
+  document.getElementById(`${conv}-res-unit`).textContent='';
+  document.getElementById(`${conv}-res-explain`).innerHTML='⚠️ Không thể chuyển đổi: chọn cùng nhóm đơn vị.';
+}
+
+function buildTip(val, fromId, result, toId) {
+  if (fromId==='mB'&&toId==='gB') return `💡 ${val} MB = ${result} GB · RAM 8 GB = 8,000 MB`;
+  if (fromId==='gB'&&toId==='mB') return `💡 ${val} GB = ${result} MB`;
+  if (fromId==='mbps'&&toId==='mbs') return `💡 Gói Internet ${val} Mbps → tải file tối đa ${result} MB/s`;
+  if (fromId==='mbs'&&toId==='mbps') return `💡 Tốc độ tải ${val} MB/s = đường truyền ${result} Mbps`;
+  if (fromId==='gbps'&&toId==='mbs') return `💡 ${val} Gbps = ${result} MB/s`;
+  if (fromId==='mbps'&&toId==='gbps') return `💡 ${val} Mbps = ${result} Gbps`;
   return null;
 }
 
-function showGroupError() {
-  const strip = document.getElementById('result-strip');
-  strip.classList.add('show');
-  document.getElementById('res-num').textContent  = '—';
-  document.getElementById('res-unit').textContent = '';
-  document.getElementById('res-explain').innerHTML =
-    '⚠️ Không thể chuyển đổi giữa đơn vị <strong>tốc độ</strong> và <strong>dung lượng</strong>. Vui lòng chọn cùng loại đơn vị (tốc độ↔tốc độ, hoặc dung lượng↔dung lượng).';
+function swapUnits(conv) {
+  const st = state[conv];
+  [st.fromId, st.toId] = [st.toId, st.fromId];
+  const vF = document.getElementById(`${conv}-inp-from`).value;
+  const vT = document.getElementById(`${conv}-inp-to`).value;
+  document.getElementById(`${conv}-inp-from`).value = vT;
+  document.getElementById(`${conv}-inp-to`).value   = vF;
+  buildBtns(conv);
+  document.getElementById(`${conv}-from-tag`).textContent = getUnit(st.fromId).label;
+  document.getElementById(`${conv}-to-tag`).textContent   = getUnit(st.toId).label;
+  if (vT.trim()) doConvert(conv);
+  else document.getElementById(`${conv}-result-strip`).classList.remove('show');
 }
 
-/* ── Swap ── */
-function swapUnits() {
-  [fromId, toId] = [toId, fromId];
-  const vFrom = document.getElementById('inp-from').value;
-  const vTo   = document.getElementById('inp-to').value;
-  document.getElementById('inp-from').value = vTo;
-  document.getElementById('inp-to').value   = vFrom;
-  buildBtns();
-  document.getElementById('from-tag').textContent = getUnit(fromId).label;
-  document.getElementById('to-tag').textContent   = getUnit(toId).label;
-  if (vTo.trim()) doConvert();
-  else document.getElementById('result-strip').classList.remove('show');
-}
-
-/* ── Table tabs ── */
 function switchTbl(i, el) {
   document.querySelectorAll('.tbl-panel').forEach((p,j) => p.classList.toggle('on', j===i));
   document.querySelectorAll('.ttab').forEach(t => t.classList.remove('on'));
   el.classList.add('on');
 }
 
-/* ── Fill from example ── */
-function fillEx(val, fId, tId) {
-  fromId = fId; toId = tId;
-  buildBtns();
-  document.getElementById('from-tag').textContent = getUnit(fromId).label;
-  document.getElementById('to-tag').textContent   = getUnit(toId).label;
-  document.getElementById('inp-from').value = val;
-  document.getElementById('inp-to').value   = '';
-  doConvert();
-  document.querySelector('.conv-card').scrollIntoView({ behavior:'smooth', block:'start' });
+function fillEx(conv, val, fId, tId) {
+  state[conv].fromId = fId; state[conv].toId = tId;
+  buildBtns(conv);
+  document.getElementById(`${conv}-from-tag`).textContent = getUnit(fId).label;
+  document.getElementById(`${conv}-to-tag`).textContent   = getUnit(tId).label;
+  document.getElementById(`${conv}-inp-from`).value = val;
+  document.getElementById(`${conv}-inp-to`).value   = '';
+  doConvert(conv);
+  document.getElementById(`card-${conv}`).scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 /* ── INIT ── */
-buildBtns();
-document.getElementById('from-tag').textContent = getUnit(fromId).label;
-document.getElementById('to-tag').textContent   = getUnit(toId).label;
-// Pre-fill a sample: 1000 MB → GB to show immediately
-document.getElementById('inp-from').value = 1000;
-doConvert();
+buildBtns('data');  buildBtns('speed');
+document.getElementById('data-from-tag').textContent  = getUnit(state.data.fromId).label;
+document.getElementById('data-to-tag').textContent    = getUnit(state.data.toId).label;
+document.getElementById('speed-from-tag').textContent = getUnit(state.speed.fromId).label;
+document.getElementById('speed-to-tag').textContent   = getUnit(state.speed.toId).label;
+document.getElementById('data-inp-from').value  = 1000; doConvert('data');
+document.getElementById('speed-inp-from').value = 100;  doConvert('speed');
 </script>
 </body>
 </html>
